@@ -65,8 +65,8 @@ class DarkTheme extends Theme {
   const DarkTheme()
     : super(
         brightness: Brightness.dark,
-        primaryColor: const Color(0xFF001233),
-        backgroundColor: const Color(0xFF171212),
+        primaryColor: const Color(0xFF171212),
+        backgroundColor: const Color.fromARGB(177, 23, 18, 18),
         textColor: const Color(0xFFCCCCCC),
       );
 }

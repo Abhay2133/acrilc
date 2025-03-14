@@ -9,6 +9,7 @@ import 'package:acrillic/widgets/starting_bg.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -46,7 +47,8 @@ class _SignupPageState extends State<SignupPage> {
 
         final responseData = tryEncodeJson(response.body);
         if (response.statusCode == 201) {
-          // Handle successful login
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString("jwt_token", responseData['token']);
           if (mounted) context.go("/app/home");
           // You can navigate to another screen here
         } else {

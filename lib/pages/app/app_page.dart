@@ -1,5 +1,5 @@
 import 'dart:math';
-
+import 'package:acrillic/widgets/sidepanel.dart';
 import 'package:acrillic/pages/app/home_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +17,7 @@ class AppPageState extends State<AppPage> {
   final List<Widget> _screens = [wip(), wip(), wip(), wip(), wip()];
 
   static wip() {
-    return Container(
+    return SizedBox(
       height: double.infinity,
       width: double.infinity,
       // color: Colors.red,
@@ -56,16 +56,22 @@ class AppPageState extends State<AppPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: const Text('acrilc')),
+        title: Center(child: const Text('Acrilc')),
+        leading: SizedBox(),
         actions: [
-          IconButton(
-            icon: Transform(
-              alignment: Alignment.center,
-              transform: Matrix4.rotationY(pi),
-              child: const Icon(Icons.sort),
-            ),
-            onPressed: () {
-              // Add drawer action or menu logic
+          Builder(
+            builder: (context) {
+              return IconButton(
+                icon: Transform(
+                  alignment: Alignment.center,
+                  transform: Matrix4.rotationY(pi),
+                  child: const Icon(Icons.sort),
+                ),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                  // Add drawer action or menu logic
+                },
+              );
             },
           ),
         ],
@@ -82,6 +88,17 @@ class AppPageState extends State<AppPage> {
           BottomNavigationBarItem(icon: Icon(Icons.mail), label: 'Inbox'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
+      ),
+      drawer: Drawer(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.zero, // Removes rounded corners
+        ),
+        child: Container(
+          width:
+              double.infinity, //.of(context).size.width, // Full-width drawer
+          color: Colors.white, // Set background color
+          child: SidePanel(),
+        ),
       ),
     );
   }
