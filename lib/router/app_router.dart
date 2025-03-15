@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../pages/home/home_page.dart';
@@ -22,7 +21,7 @@ class AppRouter {
 
       GoRoute(path: '/app/home', builder: (context, state) => AppPage(0)),
       GoRoute(path: '/app/discover', builder: (context, state) => AppPage(1)),
-      GoRoute(path: '/app/new', builder: (context, state) => AppPage(2)),
+      GoRoute(path: '/app/post', builder: (context, state) => AppPage(2)),
       GoRoute(path: '/app/index', builder: (context, state) => AppPage(3)),
       GoRoute(path: '/app/profile', builder: (context, state) => AppPage(4)),
     ],

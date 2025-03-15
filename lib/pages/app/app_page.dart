@@ -14,7 +14,7 @@ class AppPage extends StatefulWidget {
 class AppPageState extends State<AppPage> {
   int _selectedIndex = 0;
 
-  final List<Widget> _screens = [wip(), wip(), wip(), wip(), wip()];
+  final List<Widget> _screens = [HomeScreen(), wip(), wip(), wip(), wip()];
 
   static wip() {
     return SizedBox(
@@ -84,7 +84,7 @@ class AppPageState extends State<AppPage> {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Discover'),
-          BottomNavigationBarItem(icon: Icon(Icons.add_circle), label: 'New'),
+          BottomNavigationBarItem(icon: Icon(Icons.add_circle), label: 'Post'),
           BottomNavigationBarItem(icon: Icon(Icons.mail), label: 'Inbox'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],

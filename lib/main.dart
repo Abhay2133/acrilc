@@ -1,4 +1,4 @@
-import 'package:acrillic/constants/theme.dart';
+import 'package:acrillic/constants/themes.dart';
 import 'package:flutter/material.dart';
 import 'router/app_router.dart';
 
@@ -12,11 +12,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      theme: AppTheme.fromString("dark").themeData,
+      theme: AppThemes.lightTheme,
+      darkTheme: AppThemes.darkTheme,
+      themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
       title: 'Acrilc',
-      routerConfig:
-          AppRouter.router, // Using GoRouter setup from app_router.dart
+      routerConfig: AppRouter.router,
     );
   }
 }
