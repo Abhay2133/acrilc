@@ -56,7 +56,7 @@ class AppPageState extends State<AppPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: const Text('Acrilc')),
+        title: Center(child: const Text('acrilc', style: TextStyle(fontWeight: FontWeight.bold),)),
         leading: SizedBox(),
         actions: [
           Builder(
