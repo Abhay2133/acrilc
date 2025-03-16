@@ -2,9 +2,10 @@ import 'package:acrillic/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 class AppThemes {
-  static final ThemeData lightTheme = ThemeData();
+  static final ThemeData lightTheme = ThemeData(fontFamily: "Poppins");
 
   static final ThemeData darkTheme = ThemeData(
+    fontFamily: "Poppins",
     colorScheme: ColorScheme.dark(
       primary: AppColor.primary,
       onPrimary: Colors.white,
