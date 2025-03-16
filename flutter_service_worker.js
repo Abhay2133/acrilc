@@ -42,7 +42,7 @@ const RESOURCES = {"canvaskit/skwasm.js": "f2ad9363618c5f62e813740099a80e63",
 "icons/Icon-maskable-192.png": "786bb27a1e3c624ff48f31056b6d14cf",
 "manifest.json": "8e64d6e0068e3890d41c427af583283f",
 "favicon.png": "b59e5f54e5f69f5736668bddc3803b03",
-"flutter_bootstrap.js": "7033b8c20ce3134983f6c0a4e9b0284d"};
+"flutter_bootstrap.js": "399bac49b9f7b302105fd3f96e343356"};
 // The application shell files that are downloaded before a service worker can
 // start.
 const CORE = ["main.dart.js",
