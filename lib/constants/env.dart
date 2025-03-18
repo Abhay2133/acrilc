@@ -1,3 +1,5 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 class ENV {
-  static const String baseUrl = "https://various-toma-mohit123-fb3bbc5e.koyeb.app";
+  static final String baseUrl = dotenv.env["BASE_URL"] ?? "";
 }

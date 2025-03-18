@@ -22,6 +22,11 @@ jobs:
       - name: Install Dependencies
         run: flutter pub get
 
+      - name: Create .env File
+        run: |
+          echo "BASE_URL=${{ secrets.BASE_URL }}" > .env
+          echo "" >> .env
+
       - name: Build Flutter Web App
         run: flutter build web --release --base-href "/acrilc/"
 

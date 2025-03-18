@@ -19,6 +19,11 @@ jobs:
           flutter-version: 3.x
           channel: stable
 
+      - name: Create .env File
+        run: |
+          echo "BASE_URL=${{ secrets.BASE_URL }}" > .env
+          echo "" >> .env
+          
       - name: Install Dependencies
         run: flutter pub get
 
