@@ -3,7 +3,10 @@ name: Deploy Web
 on:
   push:
     branches:
-      - main  # Runs when changes are pushed to main
+      - main # Runs when changes are pushed to main
+
+env:
+  ENV_FILE: prod.env
 
 jobs:
   build-and-deploy:
@@ -21,9 +24,9 @@ jobs:
 
       - name: Create .env File
         run: |
-          echo "BASE_URL=${{ vars.BASE_URL }}" > .env
-          echo "" >> .env
-          cat .env
+          echo "BASE_URL=${{ vars.BASE_URL }}" > $ENV_FILE
+          echo "" >> $ENV_FILE
+          cat $ENV_FILE
 
       - name: Install Dependencies
         run: flutter pub get
@@ -37,4 +40,4 @@ jobs:
           branch: gh-pages
           folder: build/web
           clean: true
-          token: ${{ secrets.GH_PAT }}  # Default token should work
+          token: ${{ secrets.GH_PAT }} # Default token should work
