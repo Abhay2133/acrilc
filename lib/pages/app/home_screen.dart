@@ -1,6 +1,5 @@
 import 'package:acrillic/constants/colors.dart';
 import 'package:acrillic/services/log_service.dart';
-import 'package:acrillic/widgets/inputs.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {

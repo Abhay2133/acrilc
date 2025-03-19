@@ -22,7 +22,7 @@ class StartingBG extends StatelessWidget {
           child: Stack(
             // fit: StackFit.expand,
             children: [
-              Container(
+              SizedBox(
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width,
                 // color: Colors.red,
@@ -83,7 +83,7 @@ class StartingBG extends StatelessWidget {
               ),
 
               // Main Content
-              Container(
+              SizedBox(
                 // color: Colors.red,
                 height: MediaQuery.of(context).size.height,
                 child: Center(child: mainUI),

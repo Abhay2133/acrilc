@@ -2,16 +2,13 @@ import 'package:flutter/material.dart';
 
 class InputField extends TextFormField {
   InputField({
-    Key? key,
-    required TextEditingController controller,
+    super.key,
+    required TextEditingController super.controller,
     required String hintText,
     bool isPassword = false,
-    String? Function(String?)? validator,
+    super.validator,
   }) : super(
-          key: key,
-          controller: controller,
           obscureText: isPassword,
-          validator: validator,
           style: TextStyle(color: Colors.white),
           decoration: InputDecoration(
             hintText: hintText,
