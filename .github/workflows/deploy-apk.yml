@@ -21,14 +21,14 @@ jobs:
           flutter-version: 3.x
           channel: stable
 
-      - name: Install Dependencies
-        run: flutter pub get
-
       - name: Create .env File
         run: |
           echo "BASE_URL=${{ vars.BASE_URL }}" > $ENV_FILE
           echo "" >> $ENV_FILE
           cat $ENV_FILE
+
+      - name: Install Dependencies
+        run: flutter pub get
 
       - name: Build Flutter Web App
         run: flutter build web --release --base-href "/acrilc/"
