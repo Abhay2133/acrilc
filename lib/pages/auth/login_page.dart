@@ -73,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(title: const Text('Login')),
+      // appBar: AppsBar(title: const Text('Login')),
       body: StartingBG(
         mainUI: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -107,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
                   SizedBox(height: 10),
                   // Password Input
                   formField("Password", _passwordController, true),
-
+        
                   // Submit Button
                   SizedBox(height: 20),
                   SizedBox(
@@ -121,7 +121,10 @@ class _LoginPageState extends State<LoginPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          Text("Login", style: TextStyle(color: Colors.white)),
+                          Text(
+                            "Login",
+                            style: TextStyle(color: Colors.white),
+                          ),
                           isLoading
                               ? Padding(
                                 padding: const EdgeInsets.symmetric(

@@ -22,6 +22,12 @@ class AppThemes {
     textTheme: TextTheme(
       bodyLarge: TextStyle(color: Colors.white70),
       bodyMedium: TextStyle(color: Colors.white60),
+      headlineLarge: TextStyle(
+        fontSize: 22,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
+      titleMedium: TextStyle(fontSize: 16, color: Colors.white70),
     ),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
       backgroundColor: Color(0xFF26211C),

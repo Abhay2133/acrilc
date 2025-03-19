@@ -16,3 +16,23 @@ Color hexToColor(String hexString) {
   }
   return Color(int.parse(hexString, radix: 16));
 }
+
+void alert(BuildContext context, String text, [String title = "Alert"]) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(title),
+        content: Text(text),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); // Close dialog
+            },
+            child: Text("OK", style: Theme.of(context).textTheme.bodyMedium,),
+          ),
+        ],
+      );
+    },
+  );
+}

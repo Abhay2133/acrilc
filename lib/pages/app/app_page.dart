@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:acrillic/pages/app/profile_screen.dart';
 import 'package:acrillic/widgets/sidepanel.dart';
 import 'package:acrillic/pages/app/home_screen.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,13 @@ class AppPage extends StatefulWidget {
 class AppPageState extends State<AppPage> {
   int _selectedIndex = 0;
 
-  final List<Widget> _screens = [HomeScreen(), wip(), wip(), wip(), wip()];
+  final List<Widget> _screens = [
+    HomeScreen(),
+    wip(),
+    wip(),
+    wip(),
+    ProfileScreen(),
+  ];
 
   static wip() {
     return SizedBox(
@@ -56,7 +63,12 @@ class AppPageState extends State<AppPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: const Text('acrilc', style: TextStyle(fontWeight: FontWeight.bold),)),
+        title: Center(
+          child: const Text(
+            'acrilc',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
         leading: SizedBox(),
         actions: [
           Builder(

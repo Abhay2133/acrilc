@@ -27,16 +27,10 @@ class AppRouter {
     ],
     redirect: (context, state) async {
       final loggedIn = await isLoggedIn();
-      // final isLoggingIn = state.matchedLocation == "/login" || state.matchedLocation == "/signup";
-
-      // if (!loggedIn && !isLoggingIn) {
-      //   return "/";
-      // }
       if (loggedIn) {
-        return "/app/home";
+        return "/app/profile";
       }
-
-      return null; // Stay on the same page
+      return null;
     },
     errorBuilder: (context, state) => const NotFoundPage(),
   );
