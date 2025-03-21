@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:acrillic/constants/colors.dart';
 import 'package:acrillic/constants/env.dart';
+import 'package:acrillic/services/log_service.dart';
 import 'package:acrillic/util.dart';
 import 'package:acrillic/widgets/buttons.dart';
 import 'package:acrillic/widgets/inputs.dart';
@@ -53,16 +54,20 @@ class _SignupPageState extends State<SignupPage> {
           // You can navigate to another screen here
         } else {
           // Handle login error
-          print("Login Failed: ${response.body}");
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Signup Failed: ${responseData["msg"]}")),
-          );
+          LogService.error("Login Failed: ${response.body}");
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Signup Failed: ${responseData["msg"]}")),
+            );
+          }
         }
       } catch (e) {
-        print("Error: $e");
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("An error occurred. Please try again.")),
-        );
+        LogService.error("Error: $e");
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("An error occurred. Please try again.")),
+          );
+        }
       } finally {
         setState(() {
           isLoading = false;

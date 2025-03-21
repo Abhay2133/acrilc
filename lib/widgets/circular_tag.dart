@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class CircularTag extends StatelessWidget {
   final String label;
-  const CircularTag({required this.label});
+  const CircularTag({super.key, required this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -12,10 +12,7 @@ class CircularTag extends StatelessWidget {
         color: Color(0xFF242424), // Background color
         borderRadius: BorderRadius.circular(30), // Fully rounded shape
       ),
-      child: Text(
-        label,
-        style: TextStyle(color: Colors.white70, ),
-      ),
+      child: Text(label, style: TextStyle(color: Colors.white70)),
     );
   }
 }

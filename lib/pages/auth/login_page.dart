@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:acrillic/constants/colors.dart';
 import 'package:acrillic/constants/env.dart';
+import 'package:acrillic/services/log_service.dart';
 import 'package:acrillic/util.dart';
 import 'package:acrillic/widgets/buttons.dart';
 import 'package:acrillic/widgets/inputs.dart';
@@ -53,15 +54,19 @@ class _LoginPageState extends State<LoginPage> {
           // You can navigate to another screen here
         } else {
           // Handle login error
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Login Failed: ${responseData["msg"]}")),
-          );
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Login Failed: ${responseData["msg"]}")),
+            );
+          }
         }
       } catch (e) {
-        print("Error: $e");
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("An error occurred. Please try again.")),
-        );
+        LogService.error(e.toString());
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("An error occurred. Please try again.")),
+          );
+        }
       } finally {
         setState(() {
           isLoading = false;
@@ -107,7 +112,7 @@ class _LoginPageState extends State<LoginPage> {
                   SizedBox(height: 10),
                   // Password Input
                   formField("Password", _passwordController, true),
-        
+
                   // Submit Button
                   SizedBox(height: 20),
                   SizedBox(
@@ -121,10 +126,7 @@ class _LoginPageState extends State<LoginPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          Text(
-                            "Login",
-                            style: TextStyle(color: Colors.white),
-                          ),
+                          Text("Login", style: TextStyle(color: Colors.white)),
                           isLoading
                               ? Padding(
                                 padding: const EdgeInsets.symmetric(

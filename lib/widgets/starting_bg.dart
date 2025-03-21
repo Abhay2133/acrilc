@@ -1,6 +1,4 @@
-import 'dart:math';
 
-import 'package:acrillic/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 class StartingBG extends StatelessWidget {
