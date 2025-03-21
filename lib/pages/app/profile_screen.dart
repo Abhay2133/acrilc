@@ -1,7 +1,9 @@
 import 'package:acrillic/constants/colors.dart';
 import 'package:acrillic/util.dart';
+import 'package:acrillic/widgets/carousel.dart';
 import 'package:acrillic/widgets/circular_tag.dart';
 import 'package:acrillic/widgets/img.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -17,6 +19,8 @@ class ProfileScreen extends StatelessWidget {
           ActionButtons(),
           Forte(),
           Story(),
+          GridGallery(),
+          SizedBox(height: 60),
         ],
       ),
     );
@@ -275,20 +279,126 @@ class Forte extends StatelessWidget {
 }
 
 class Story extends StatelessWidget {
+  final List<Map<String, String>> cards;
+  const Story({
+    super.key,
+    this.cards = const [
+      {"src": "", "title": "Card title 1", "detail": "Card details 1"},
+      {"src": "", "title": "Card title 2", "detail": "Card details 2"},
+      {"src": "", "title": "Card title 3", "detail": "Card details 3"},
+      {"src": "", "title": "Card title 4", "detail": "Card details 4"},
+    ],
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        double cardWith = (constraints.maxWidth * 0.8).clamp(200, 400);
+        List<Widget> storyCards =
+            cards.map((item) {
+              return card(item, cardWith);
+            }).toList();
+        return Container(
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Story of Artist",
+                style: Theme.of(context).textTheme.headlineLarge,
+              ),
+              SizedBox(height: 10),
+              Text(
+                "My work is an exploration of the human experience through abstraction. I use a variety of materials and techniques to create a rich surface that reflects the complexity of life.",
+              ),
+              SizedBox(height: 10),
+              Carousel(items: storyCards),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget card(Map<String, String> card, double cardWith) {
+    return Builder(
+      builder: (context) {
+        return Container(
+          height: 270,
+          width: cardWith,
+          margin: EdgeInsets.symmetric(horizontal: 5.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: 200,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  image: DecorationImage(
+                    image: AssetImage('assets/images/profile-banner.png'),
+                    // Change to your banner image
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              SizedBox(height: 5),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                child: Text(
+                  card['title'].toString(),
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+              ),
+              SizedBox(height: 5),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                child: Text(card['detail'].toString()),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class GridGallery extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Story of Artist",
-            style: Theme.of(context).textTheme.headlineLarge,
-          ),
-        ],
-      ),
+      padding: EdgeInsets.symmetric(horizontal: 30),
+      child: Column(children: [header()]),
+    );
+  }
+
+  Widget header() {
+    return Builder(
+      builder: (context) {
+        TextStyle activeTabStyle = Theme.of(context).textTheme.headlineMedium!;
+        TextStyle tabStyle = TextStyle(
+          fontSize: activeTabStyle.fontSize,
+          color: activeTabStyle.color,
+        );
+        return Flex(
+          direction: Axis.horizontal,
+          spacing: 12,
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(width: 2, color: activeTabStyle.color!),
+                ),
+              ),
+              child: Text("Showcase", style: activeTabStyle),
+            ),
+            Text("Storyboard", style: tabStyle),
+            Text("MarketPlace", style: tabStyle),
+          ],
+        );
+      },
     );
   }
 }
