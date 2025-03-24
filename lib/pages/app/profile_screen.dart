@@ -6,11 +6,61 @@ import 'package:acrillic/widgets/img.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
+class Review {
+  final String reviewerName;
+  final String reviewDate;
+  final int stars;
+  final String text;
+
+  Review({
+    required this.reviewerName,
+    required this.reviewDate,
+    required this.stars,
+    required this.text,
+  });
+}
+
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    List<Review> reviews = [
+      Review(
+        reviewerName: "Alice Johnson",
+        reviewDate: "March 20, 2025",
+        stars: 5,
+        text:
+            "Amazing service! Highly recommended for anyone looking for quality work.",
+      ),
+      Review(
+        reviewerName: "David Smith",
+        reviewDate: "March 18, 2025",
+        stars: 4,
+        text:
+            "Great experience overall. A few minor improvements would make it perfect.",
+      ),
+      Review(
+        reviewerName: "Emily Carter",
+        reviewDate: "March 15, 2025",
+        stars: 5,
+        text:
+            "Absolutely fantastic! The team went above and beyond my expectations.",
+      ),
+      Review(
+        reviewerName: "Michael Brown",
+        reviewDate: "March 10, 2025",
+        stars: 3,
+        text: "Decent service, but there were some delays in response time.",
+      ),
+      Review(
+        reviewerName: "Sophia Wilson",
+        reviewDate: "March 5, 2025",
+        stars: 5,
+        text:
+            "Excellent support and a well-designed platform. Very happy with it!",
+      ),
+    ];
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -19,8 +69,49 @@ class ProfileScreen extends StatelessWidget {
           ActionButtons(),
           Forte(),
           Story(),
-          GridGallery(),
-          SizedBox(height: 60),
+          // GridGallery(),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  "Testimonoial",
+                  style: Theme.of(context).textTheme.headlineLarge,
+                ),
+              ],
+            ),
+          ),
+          ReviewCard(review: reviews[0]),
+          // TestimonialWidget(reviews: reviews),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+            child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFFE34A1C),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(200), // Set border radius
+                  ),
+                ),
+                onPressed: () {
+                  alert(context, "Hello");
+                },
+                child: Container(
+                  height: 50,
+                  alignment: Alignment.center,
+                  child: Text(
+                    "Portfolio",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+          ),
+
+          // SizedBox(height: 60),
         ],
       ),
     );
@@ -399,6 +490,66 @@ class GridGallery extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+}
+
+class TestimonialWidget extends StatelessWidget {
+  final List<Review> reviews;
+
+  const TestimonialWidget({super.key, required this.reviews});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: reviews.length,
+      itemBuilder: (context, index) {
+        return ReviewCard(review: reviews[index]);
+      },
+    );
+  }
+}
+
+class ReviewCard extends StatelessWidget {
+  final Review review;
+
+  const ReviewCard({super.key, required this.review});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: 3,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              review.reviewerName,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              review.reviewDate,
+              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: List.generate(
+                5,
+                (index) => Icon(
+                  index < review.stars ? Icons.star : Icons.star_border,
+                  color: Colors.amber,
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(review.text, style: const TextStyle(fontSize: 16)),
+          ],
+        ),
+      ),
     );
   }
 }
