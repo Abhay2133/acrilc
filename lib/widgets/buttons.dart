@@ -36,3 +36,36 @@ class Button extends StatelessWidget {
   }
 }
 
+class PrimaryButton extends StatelessWidget {
+  final String text;
+  final VoidCallback onPressed;
+
+  const PrimaryButton({
+    Key? key,
+    required this.text,
+    required this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final bgColor = isDarkMode ? Colors.orange[700] : const Color(0xFFE34A1C);
+
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: bgColor,
+        foregroundColor: Colors.white,
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+      onPressed: onPressed,
+      child: Text(
+        text,
+        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+}
+
