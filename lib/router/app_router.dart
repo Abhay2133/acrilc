@@ -35,11 +35,16 @@ class AppRouter {
       _buildRoute("/app/settings/account_security", AccountSecurityPage()),
     ],
     redirect: (context, state) async {
+      if (state.fullPath == "/" ||
+          state.fullPath == "/login" ||
+          state.fullPath == "/signup") {
+        return null;
+      }
       final loggedIn = await isLoggedIn();
       if (!loggedIn) {
         return "/";
       }
-      return state.fullPath;
+      return null;
     },
     errorBuilder: (context, state) => const NotFoundPage(),
   );
