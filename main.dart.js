@@ -42548,13 +42548,16 @@ $0(){A.oU(this.a,"Danger Zone tapped","Alert")},
 $S:0}
 A.a15.prototype={
 $2(a,b){return this.a_g(a,b)},
-a_g(a,b){var s=0,r=A.Q(t.ob),q
+a_g(a,b){var s=0,r=A.Q(t.ob),q,p
 var $async$$2=A.M(function(c,d){if(c===1)return A.N(d,r)
-while(true)switch(s){case 0:s=3
+while(true)switch(s){case 0:p=b.f
+if(p==="/"||p==="/login"||p==="/signup"){q=null
+s=1
+break}s=3
 return A.T(A.a13(),$async$$2)
 case 3:if(!d){q="/"
 s=1
-break}q=b.f
+break}q=null
 s=1
 break
 case 1:return A.O(q,r)}})
