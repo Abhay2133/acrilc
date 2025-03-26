@@ -1,5 +1,6 @@
 import 'package:acrillic/widgets/buttons.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class ProfileSettingsPage extends StatelessWidget {
   const ProfileSettingsPage({super.key});
@@ -45,6 +46,12 @@ class ProfileSettingsPage extends StatelessWidget {
                     isMultiLine: true,
                     maxLength: 300,
                   ),
+            ),
+            _settingItem(
+              title: "Forte",
+              subtitle: "Your art preferences",
+              onTap:
+                  () => context.push("/app/settings/profile/forte"),
             ),
             const SizedBox(height: 20),
             _sectionTitle("Social Links"),

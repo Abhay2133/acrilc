@@ -1,5 +1,8 @@
-import 'package:acrillic/pages/settings/account_security/account_security_page.dart';
-import 'package:acrillic/pages/settings/profile_settings_page.dart'
+import 'package:acrillic/pages/settings/account/account_security_page.dart';
+import 'package:acrillic/pages/settings/appearance/appearance_settings_page.dart';
+import 'package:acrillic/pages/settings/preference_settings_page.dart';
+import 'package:acrillic/pages/settings/profile_settings/forte_page.dart';
+import 'package:acrillic/pages/settings/profile_settings/profile_settings_page.dart'
     show ProfileSettingsPage;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -20,19 +23,22 @@ class AppRouter {
   static final GoRouter router = GoRouter(
     initialLocation: '/app/home',
     routes: [
-      _buildRoute('/', const HomePage()),
-      _buildRoute('/login', const LoginPage()),
-      _buildRoute('/signup', const SignupPage()),
+      _buildARoute('/', const HomePage()),
+      _buildARoute('/login', const LoginPage()),
+      _buildARoute('/signup', const SignupPage()),
 
-      _buildRoute('/app/home', AppPage(0)),
-      _buildRoute('/app/discover', AppPage(1)),
-      _buildRoute('/app/post', AppPage(2)),
-      _buildRoute('/app/index', AppPage(3)),
-      _buildRoute('/app/profile', AppPage(4)),
+      _buildARoute('/app/home', AppPage(0)),
+      _buildARoute('/app/discover', AppPage(1)),
+      _buildARoute('/app/post', AppPage(2)),
+      _buildARoute('/app/index', AppPage(3)),
+      _buildARoute('/app/profile', AppPage(4)),
 
-      _buildRoute('/app/settings', const SettingsPage()),
-      _buildRoute('/app/settings/profile', const ProfileSettingsPage()),
-      _buildRoute("/app/settings/account_security", AccountSecurityPage()),
+      _buildARoute('/app/settings', const SettingsPage()),
+      _buildARoute('/app/settings/profile', const ProfileSettingsPage()),
+      _buildARoute("/app/settings/profile/forte", FortePage()),
+      _buildARoute("/app/settings/account_security", AccountSecurityPage()),
+      _buildARoute("/app/settings/preferences", PreferencesSettingsPage()),
+      _buildARoute("/app/settings/appearance", AppearanceSettingsPage()),
     ],
     redirect: (context, state) async {
       if (state.fullPath == "/" ||
@@ -49,11 +55,15 @@ class AppRouter {
     errorBuilder: (context, state) => const NotFoundPage(),
   );
 
-  static GoRoute _buildRoute(String path, Widget page) {
+  static GoRoute _buildARoute(String path, Widget page) {
     return GoRoute(
       path: path,
       pageBuilder: (context, state) => buildPageWithTransition(state, page),
     );
+  }
+
+  static GoRoute _buildRoute(String path, Widget page) {
+    return GoRoute(path: path, builder: (context, state) => page);
   }
 
   static CustomTransitionPage buildPageWithTransition(

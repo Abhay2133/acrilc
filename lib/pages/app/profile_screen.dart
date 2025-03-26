@@ -456,6 +456,8 @@ class Story extends StatelessWidget {
 }
 
 class GridGallery extends StatelessWidget {
+  const GridGallery({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(

@@ -15,4 +15,7 @@ class AppColor {
 
   // secondary
   static final Color secondary = Color(0xFF382B29);
+
+  // Primary Color
+  static final Color primaryColor = Color(0xFFE34A1C);
 }

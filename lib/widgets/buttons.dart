@@ -41,15 +41,15 @@ class PrimaryButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   const PrimaryButton({
-    Key? key,
+    super.key,
     required this.text,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final bgColor = isDarkMode ? Colors.orange[700] : const Color(0xFFE34A1C);
+    final bgColor = isDarkMode ? AppColor.primaryColor : const Color(0xFFE34A1C);
 
     return ElevatedButton(
       style: ElevatedButton.styleFrom(

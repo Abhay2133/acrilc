@@ -9,12 +9,6 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new_rounded),
-          onPressed: () {
-            context.pop();
-          },
-        ),
         title: Text("Settings"),
       ),
       body: SingleChildScrollView(
@@ -43,7 +37,7 @@ class SettingsPage extends StatelessWidget {
                 Icon(Icons.settings, color: Colors.orange),
                 "Preferences",
                 () {
-                  alert(context, "Preferences tapped");
+                  context.push("/app/settings/preferences");
                 },
               ),
               // Divider(),
@@ -51,7 +45,7 @@ class SettingsPage extends StatelessWidget {
                 Icon(Icons.palette, color: Colors.purple),
                 "Appearance",
                 () {
-                  alert(context, "Appearance tapped");
+                  context.push("/app/settings/appearance");
                 },
               ),
               // Divider(),
@@ -59,7 +53,7 @@ class SettingsPage extends StatelessWidget {
                 Icon(Icons.warning, color: Colors.red),
                 "Danger Zone",
                 () {
-                  alert(context, "Danger Zone tapped");
+                  alert(context, "Coming Soon", "Stay Tuned");
                 },
               ),
             ],
