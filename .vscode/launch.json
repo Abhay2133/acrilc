@@ -6,18 +6,18 @@
   "configurations": [
   
     {
-      "name": "acrillic",
+      "name": "acrilc",
       "request": "launch",
       "type": "dart"
     },
     {
-      "name": "acrillic (profile mode)",
+      "name": "acrilc (profile mode)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "profile"
     },
     {
-      "name": "acrillic (release mode)",
+      "name": "acrilc (release mode)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "release"

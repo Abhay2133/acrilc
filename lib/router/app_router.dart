@@ -1,9 +1,12 @@
+import 'package:acrillic/pages/app/home_screen.dart';
+import 'package:acrillic/pages/app/profile_screen.dart';
 import 'package:acrillic/pages/settings/account/account_security_page.dart';
 import 'package:acrillic/pages/settings/appearance/appearance_settings_page.dart';
 import 'package:acrillic/pages/settings/preference_settings_page.dart';
 import 'package:acrillic/pages/settings/profile_settings/forte_page.dart';
 import 'package:acrillic/pages/settings/profile_settings/profile_settings_page.dart'
     show ProfileSettingsPage;
+import 'package:acrillic/widgets/wip.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,11 +30,23 @@ class AppRouter {
       _buildARoute('/login', const LoginPage()),
       _buildARoute('/signup', const SignupPage()),
 
-      _buildARoute('/app/home', AppPage(0)),
-      _buildARoute('/app/discover', AppPage(1)),
-      _buildARoute('/app/post', AppPage(2)),
-      _buildARoute('/app/index', AppPage(3)),
-      _buildARoute('/app/profile', AppPage(4)),
+      // _buildARoute('/app/home', AppPage(0)),
+      // _buildARoute('/app/discover', AppPage(1)),
+      // _buildARoute('/app/post', AppPage(2)),
+      // _buildARoute('/app/index', AppPage(3)),
+      // _buildARoute('/app/profile', AppPage(4)),
+      ShellRoute(
+        builder: (context, state, child) {
+          return AppPage1(child: child);
+        },
+        routes: [
+          _buildRoute('/app/home', HomeScreen()),
+          _buildRoute("/app/discover", WIP()),
+          _buildRoute("/app/post", WIP()),
+          _buildRoute("/app/chat", WIP()),
+          _buildRoute("/app/profile", ProfileScreen()),
+        ],
+      ),
 
       _buildARoute('/app/settings', const SettingsPage()),
       _buildARoute('/app/settings/profile', const ProfileSettingsPage()),

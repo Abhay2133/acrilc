@@ -1,9 +1,7 @@
-import 'package:acrillic/constants/colors.dart';
 import 'package:acrillic/util.dart';
 import 'package:acrillic/widgets/carousel.dart';
 import 'package:acrillic/widgets/circular_tag.dart';
 import 'package:acrillic/widgets/img.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
 class Review {
