@@ -7880,7 +7880,7 @@ case 9:s=8
 return A.R(c.Sn(a0),$async$wR)
 case 8:i=a0
 g=i.b
-if(g===200||g===201){g=J.hr(B.b9.KF(A.LT(A.LM(i.e).c.a.i(0,"charset")).dU(i.w),null),"post")
+if(g===200||g===201){g=J.hr(B.b9.KF(A.LT(A.LM(i.e).c.a.i(0,"charset")).dU(i.w),null),"data")
 p=g.i(0,"_id")
 g.i(0,"author")
 g.i(0,"title")
