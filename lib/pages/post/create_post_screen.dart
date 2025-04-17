@@ -6,6 +6,7 @@ import 'package:acrilc/util.dart';
 import 'package:acrilc/widgets/buttons.dart';
 import 'package:acrilc/widgets/spinner.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:acrilc/models/post.dart';
 
@@ -72,6 +73,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text("Post created successfully")));
+        String postId = post.id ?? "";
+        context.replace("/post/$postId");
       }
     } catch (e) {
       print('Error creating post: $e');
