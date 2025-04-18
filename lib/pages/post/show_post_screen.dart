@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:acrilc/models/post.dart';
 
-class ShowPostScreen extends StatelessWidget {
+class ShowPostScreen extends StatefulWidget {
   final String postId;
   final String backURL;
 
@@ -12,31 +12,52 @@ class ShowPostScreen extends StatelessWidget {
     required this.postId,
     this.backURL = "/app/home",
   });
-  
+
+  @override
+  State<ShowPostScreen> createState() => _ShowPostScreenState();
+}
+
+class _ShowPostScreenState extends State<ShowPostScreen> {
+  void _onMenuSelected(String value) {
+    // You can handle your logic here
+    print("Selected: $value");
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      // backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        // backgroundColor: Colors.black,
         leading: IconButton(
           onPressed: () {
             context.pop();
           },
-          icon: Icon(Icons.arrow_back_ios_rounded, color: Colors.white),
+          icon: Icon(Icons.arrow_back_ios_rounded),
         ),
+        actions: [
+          PopupMenuButton<String>(
+            onSelected: _onMenuSelected,
+            icon: Icon(Icons.more_vert),
+            itemBuilder:
+                (BuildContext context) => [
+                  PopupMenuItem(value: 'secure_it', child: Text('Secure it')),
+                  PopupMenuItem(value: 'moodboard', child: Text('Save to Moodboard')),
+                  PopupMenuItem(value: 'storyboard', child: Text('Move to Storyboard')),
+                ],
+          ),
+          SizedBox(width: 8,)
+        ],
         elevation: 0,
       ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Stack(
-              children: [
-                CarouselSlider(
-                  options: CarouselOptions(height: 300.0),
-                  items: [1, 2, 3].map((i) {
+            CarouselSlider(
+              options: CarouselOptions(height: 300.0),
+              items:
+                  [1, 2, 3].map((i) {
                     return Builder(
                       builder: (BuildContext context) {
                         return Container(
@@ -58,41 +79,38 @@ class ShowPostScreen extends StatelessWidget {
                       },
                     );
                   }).toList(),
-                ),
-                Positioned(
-                  top: 16,
-                  right: 16,
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.9),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text("Secure It", style: TextStyle(fontWeight: FontWeight.bold)),
-                        SizedBox(height: 8),
-                        Text("Save to Moodboard"),
-                        Text("Move to Storyboard"),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
             ),
 
+            // Positioned(
+            //   top: 16,
+            //   right: 16,
+            //   child: Container(
+            //     padding: const EdgeInsets.all(12),
+            //     decoration: BoxDecoration(
+            //       color: Colors.white.withOpacity(0.9),
+            //       borderRadius: BorderRadius.circular(12),
+            //     ),
+            //     child: Column(
+            //       crossAxisAlignment: CrossAxisAlignment.start,
+            //       children: const [
+            //         Text(
+            //           "Secure It",
+            //           style: TextStyle(fontWeight: FontWeight.bold),
+            //         ),
+            //         SizedBox(height: 8),
+            //         Text("Save to Moodboard"),
+            //         Text("Move to Storyboard"),
+            //       ],
+            //     ),
+            //   ),
+            // ),
             const SizedBox(height: 24),
 
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: const Text(
+              child: Text(
                 "Under The Moonlight",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
+                style: Theme.of(context).textTheme.headlineMedium,
               ),
             ),
 
@@ -100,33 +118,36 @@ class ShowPostScreen extends StatelessWidget {
 
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: const Text(
+              child: Text(
                 "Acrylic on canvas",
-                style: TextStyle(color: Colors.white70),
+                style: Theme.of(context).textTheme.headlineSmall,
               ),
             ),
 
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4),
-              child: const Text(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 4,
+              ),
+              child: Text(
                 "30 x 40 in",
-                style: TextStyle(color: Colors.white70),
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
             ),
 
-            const Padding(
+            Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
               child: Text(
                 "Story Behind the Art",
-                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
             ),
 
-            const Padding(
+            Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0),
               child: Text(
                 "Inspired by the artist’s childhood memory of playing under the moonlight.",
-                style: TextStyle(color: Colors.white70),
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
             ),
 
@@ -134,10 +155,13 @@ class ShowPostScreen extends StatelessWidget {
 
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: const [
-                Text("Applauds", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                Text("Comment", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                Text("Appreciate", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+              children: [
+                Text("Applauds", style: Theme.of(context).textTheme.bodyMedium),
+                Text("Comment", style: Theme.of(context).textTheme.bodyMedium),
+                Text(
+                  "Appreciate",
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
               ],
             ),
 
@@ -157,9 +181,12 @@ class ShowPostScreen extends StatelessWidget {
                 onPressed: () {
                   // Navigate to marketplace
                 },
-                child: const Text(
+                child: Text(
                   "Move to Marketplace",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.bodyMedium?.apply(
+                    color: Colors.white,
+                    fontWeightDelta: 3,
+                  ),
                 ),
               ),
             ),
@@ -168,22 +195,6 @@ class ShowPostScreen extends StatelessWidget {
           ],
         ),
       ),
-      // bottomNavigationBar: BottomNavigationBar(
-      //   backgroundColor: Colors.black,
-      //   selectedItemColor: Colors.black,
-      //   unselectedItemColor: Colors.black,
-      //   currentIndex: 2, // Set to "Post"
-      //   items: const [
-      //     BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-      //     BottomNavigationBarItem(icon: Icon(Icons.groups), label: "Community"),
-      //     BottomNavigationBarItem(icon: Icon(Icons.add_circle), label: "Post"),
-      //     BottomNavigationBarItem(icon: Icon(Icons.inbox), label: "Inbox"),
-      //     BottomNavigationBarItem(icon: Icon(Icons.person), label: "Me"),
-      //   ],
-      //   onTap: (index) {
-      //     // Handle bottom navigation tap
-      //   },
-      // ),
     );
   }
 }
