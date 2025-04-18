@@ -1,5 +1,6 @@
 import 'package:acrilc/constants/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 class ChatScreen extends StatelessWidget {
@@ -54,6 +55,7 @@ class ChatScreen extends StatelessWidget {
                     style: TextStyle(color: Colors.grey[600], fontSize: 12),
                   ),
                   onTap: () {
+                    context.push("/chat/userId");
                     // Handle chat open
                   },
                 );
@@ -66,6 +68,7 @@ class ChatScreen extends StatelessWidget {
         backgroundColor: AppColor.primaryColor,
         onPressed: () {
           // Handle new chat action
+          context.push("/chat/new");
         },
         child: Icon(Icons.chat, color: Colors.white),
       ),

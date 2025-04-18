@@ -2,6 +2,8 @@ import 'package:acrilc/pages/app/chat_screen.dart';
 import 'package:acrilc/pages/app/discover_screen.dart';
 import 'package:acrilc/pages/app/home_screen.dart';
 import 'package:acrilc/pages/app/profile_screen.dart';
+import 'package:acrilc/pages/chat/user_chat.dart';
+import 'package:acrilc/pages/chat/users_list.dart';
 import 'package:acrilc/pages/post/create_post_screen.dart';
 import 'package:acrilc/pages/post/show_post_screen.dart';
 import 'package:acrilc/pages/settings/account/account_security_page.dart';
@@ -88,6 +90,13 @@ class AppRouter {
           return ShowPostScreen(postId: postId);
         },
       ),
+
+      // Chat routes
+      _buildARoute("/chat/new", UsersList()),
+      _buildARoute("/chat/:userId", null, builder: (context, state){
+        final String userId = state.pathParameters["userId"] ?? "";
+        return UserChat(userId: userId,);
+      }),
     ],
     redirect: (context, state) async {
       if (state.fullPath == "/" ||
