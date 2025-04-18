@@ -47,7 +47,7 @@ class AppColor {
   // Accent / Primary Color
   static Color get primaryColor => _themeColor(
         dark: const Color(0xFFE34A1C),
-        light: const Color(0xFFD0350B),
+        light: const Color.fromARGB(255, 255, 101, 59),
       );
 
   // Neutral background shades from 100 to 900
