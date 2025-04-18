@@ -1,14 +1,36 @@
 import 'dart:math';
+import 'package:acrilc/services/websocket_service.dart';
 import 'package:acrilc/widgets/sidepanel.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart'; // show GoRouterHelper, GoRouterState;
+import 'package:go_router/go_router.dart';
+import 'package:socket_io_client/socket_io_client.dart'; // show GoRouterHelper, GoRouterState;
 
 enum Page { home, discover, post, chat, profile }
 
-class AppPage extends StatelessWidget {
+class AppPage extends StatefulWidget {
   final Widget child;
 
   const AppPage({super.key, required this.child});
+
+  @override
+  State<AppPage> createState() => _AppPageState();
+}
+
+class _AppPageState extends State<AppPage> {
+  @override
+  void initState() {
+    super.initState();
+
+    final _socket = WebSocketService();
+    _socket.connect();
+    _socket.onAny = _onMessage;
+  }
+
+  dynamic _onMessage(String? event, dynamic data) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text("$event")));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +74,7 @@ class AppPage extends StatelessWidget {
         ),
       ),
 
-      body: child,
+      body: widget.child,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _getSelectedIndex(context),
         onTap: (index) {
