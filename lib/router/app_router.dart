@@ -1,3 +1,4 @@
+import 'package:acrilc/pages/app/chat_screen.dart';
 import 'package:acrilc/pages/app/discover_screen.dart';
 import 'package:acrilc/pages/app/home_screen.dart';
 import 'package:acrilc/pages/app/profile_screen.dart';
@@ -60,7 +61,7 @@ class AppRouter {
           _buildRoute('/app/home', HomeScreen()),
           _buildRoute("/app/discover", DiscoverScreen()),
           // _buildRoute("/app/post", WIP()),
-          _buildRoute("/app/chat", WIP()),
+          _buildRoute("/app/chat", ChatScreen()),
           _buildRoute("/app/profile", ProfileScreen()),
         ],
       ),
@@ -79,10 +80,14 @@ class AppRouter {
         CreatePostScreen(),
         transition: TransitionType.slideNorth,
       ),
-      _buildARoute("/post/:postId",null, builder: (context, state){
-        final String postId = state.pathParameters["postId"] ?? "";
-        return ShowPostScreen(postId: postId);
-      }),
+      _buildARoute(
+        "/post/:postId",
+        null,
+        builder: (context, state) {
+          final String postId = state.pathParameters["postId"] ?? "";
+          return ShowPostScreen(postId: postId);
+        },
+      ),
     ],
     redirect: (context, state) async {
       if (state.fullPath == "/" ||
@@ -104,9 +109,8 @@ class AppRouter {
   }
 
   static GoRoute _buildARoute(
-    String path, 
-    Widget? page,
-    {
+    String path,
+    Widget? page, {
     TransitionType transition = TransitionType.slideWest,
     Widget Function(BuildContext, GoRouterState)? builder,
   }) {
