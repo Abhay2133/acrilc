@@ -12,6 +12,7 @@ class ShowPostScreen extends StatelessWidget {
     required this.postId,
     this.backURL = "/app/home",
   });
+  
 
   @override
   Widget build(BuildContext context) {
