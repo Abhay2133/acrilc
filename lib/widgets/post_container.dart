@@ -2,14 +2,15 @@ import 'package:acrilc/constants/sample.dart';
 import 'package:acrilc/services/log_service.dart';
 import 'package:flutter/material.dart';
 import 'package:insta_image_viewer/insta_image_viewer.dart';
+import 'package:share_plus/share_plus.dart';
 
 class PostContainer extends StatelessWidget {
   const PostContainer({super.key});
 
   @override
   Widget build(BuildContext context) {
-    List<PostData> data = List.generate(6, (int index) {
-      return PostData.load(hardcodedPostData[index]);
+    List<PostCardData> data = List.generate(6, (int index) {
+      return PostCardData.load(hardcodedPostData[index]);
     });
     // return Placeholder();
     return Padding(
@@ -21,7 +22,7 @@ class PostContainer extends StatelessWidget {
         physics:
             NeverScrollableScrollPhysics(), // 👈 Disable ListView’s scroll because parent scrolls
         itemBuilder: (context, index) {
-          PostData post = data[index];
+          PostCardData post = data[index];
           // return Text(post["postID"]);
           return PostCard(
             postId: post.postId,
@@ -224,7 +225,7 @@ class _PostCardState extends State<PostCard> {
           "",
           onPressed: () {
             LogService.debug("Sharing: ${widget.shareLink}");
-            // Share.share('Check out this awesome app! https://example.com');
+            Share.share('Check out this awesome app! https://example.com');
           },
         ),
       ],
@@ -252,7 +253,7 @@ class _PostCardState extends State<PostCard> {
   }
 }
 
-class PostData {
+class PostCardData {
   final String postId;
   final String profileUrl;
   final String name;
@@ -264,7 +265,7 @@ class PostData {
   final int commentsCount;
   final String shareLink;
 
-  PostData({
+  PostCardData({
     required this.postId,
     required this.profileUrl,
     required this.name,
@@ -277,8 +278,8 @@ class PostData {
     required this.shareLink,
   });
 
-  static PostData load(Map<String, dynamic> json) {
-    return PostData(
+  static PostCardData load(Map<String, dynamic> json) {
+    return PostCardData(
       postId: json['postId'] as String,
       profileUrl: json['profileUrl'] as String,
       name: json['name'] as String,

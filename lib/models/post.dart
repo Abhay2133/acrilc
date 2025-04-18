@@ -66,7 +66,7 @@ class PostData {
   final List<String>? links;
   final List<String>? hashTags;
   final List<String>? mentions;
-  final List<String>? media;
+  final List<dynamic>? media;
   final String? forte;
   final String? location;
   final List<String>? applauds;
@@ -104,7 +104,7 @@ class PostData {
       links: List<String>.from(json['links']),
       hashTags: List<String>.from(json['hashTags']),//.isNotEmpty ? List<String>.from(json['hashTags']?.first?.split(',')): List.empty(), // flatten
       mentions: List<String>.from(json['mentions']),
-      media: List<String>.from(json['media']),
+      media: List<dynamic>.from(json['media']),
       forte: json['forte'],
       location: json['location'],
       applauds: List<String>.from(json['applauds']),
