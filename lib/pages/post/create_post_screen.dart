@@ -1,3 +1,4 @@
+import 'package:path/path.dart' as path;
 import 'dart:io';
 
 import 'package:acrilc/constants/colors.dart';
@@ -26,24 +27,39 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   String? _selectedForte;
   final List<String> _tags = [];
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  Future<void> _pickImages() async {
-    final pickedFiles = await picker.pickMultiImage();
-    setState(() {
-      _images.addAll(pickedFiles);
-    });
-  }
-
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _storyController = TextEditingController();
   final TextEditingController _sizeController = TextEditingController();
   final TextEditingController _tagController = TextEditingController();
 
   bool isLoading = false;
+
+  Future<void> _pickImages() async {
+    final pickedFiles = await picker.pickMultiImage();
+
+    if (pickedFiles != null && pickedFiles.isNotEmpty) {
+      // Filter out unsupported file types
+      final filteredFiles =
+          pickedFiles.where((file) {
+            final extension = path.extension(file.path).toLowerCase();
+            return ['.jpg', '.jpeg', '.png', '.gif'].contains(extension);
+          }).toList();
+
+      // Optionally notify user if some files were skipped
+      if (filteredFiles.length != pickedFiles.length) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Only JPG, PNG, and GIF files are allowed. Some files were ignored.',
+            ),
+          ),
+        );
+      }
+      setState(() {
+        _images.addAll(filteredFiles);
+      });
+    }
+  }
 
   Future<dynamic> _handleSubmit() async {
     if (isLoading == true) return;
@@ -59,16 +75,9 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
           size: _sizeController.text.trim(),
           forte: _selectedForte ?? '',
           files: _images.map((img) => img.path).toList(),
-          // links: [], // no links UI yet
-          // mentions: [], // no mentions feature yet
-          // location: '', // no location input
-          // collectionId: _selectedCollection ?? '',
-          // subtitle: '', // no subtitle input, keeping it empty
         ),
       );
 
-      // Optional success feedback
-      // print('Post created: ${post.id}');
       if (mounted) {
         ScaffoldMessenger.of(
           context,
@@ -78,12 +87,28 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       }
     } catch (e) {
       print('Error creating post: $e');
-      if(mounted)alert(context, e.toString(), title: "Error Message", copy: true);
+      if (mounted) {
+        alert(context, e.toString(), title: "Error Message", copy: true);
+      }
     } finally {
       setState(() {
         isLoading = false;
       });
     }
+  }
+
+  String? _validateRequiredField(String? value, String fieldName) {
+    if (value == null || value.trim().isEmpty) {
+      return '$fieldName is required';
+    }
+    return null;
+  }
+
+  String? _validateDropdown(String? value, String fieldName) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Please select a $fieldName';
+    }
+    return null;
   }
 
   @override
@@ -101,29 +126,35 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            // Images Section
             _imagesUI(context),
             const SizedBox(height: 16),
+
             // Title
             TextFormField(
               controller: _titleController,
               decoration: const InputDecoration(labelText: 'Post Title'),
+              validator: (value) => _validateRequiredField(value, "Title"),
             ),
             const SizedBox(height: 12),
+
             // Story
             TextFormField(
               controller: _storyController,
               maxLines: 4,
               decoration: const InputDecoration(labelText: 'Post Story'),
+              validator: (value) => _validateRequiredField(value, "Story"),
             ),
             const SizedBox(height: 12),
+
             // Size
             TextFormField(
               controller: _sizeController,
               decoration: const InputDecoration(labelText: 'Size'),
+              validator: (value) => _validateRequiredField(value, "Size"),
             ),
             const SizedBox(height: 12),
-            // Collection Dropdown
+
+            // Collection Dropdown (Optional)
             DropdownButtonFormField<String>(
               value: _selectedCollection,
               items:
@@ -132,9 +163,12 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                       .toList(),
               onChanged: (val) => setState(() => _selectedCollection = val),
               decoration: const InputDecoration(labelText: 'Collection'),
+              // Optional validator (uncomment to make required):
+              validator: (value) => _validateDropdown(value, "Collection"),
             ),
             const SizedBox(height: 12),
-            // Type Dropdown
+
+            // Type Dropdown (Required)
             DropdownButtonFormField<String>(
               value: _selectedForte,
               items:
@@ -143,8 +177,10 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                       .toList(),
               onChanged: (val) => setState(() => _selectedForte = val),
               decoration: const InputDecoration(labelText: 'Type'),
+              validator: (value) => _validateDropdown(value, "Type"),
             ),
             const SizedBox(height: 12),
+
             // Tags Input
             TextFormField(
               controller: _tagController,
@@ -182,12 +218,18 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         padding: const EdgeInsets.all(16),
         child: Button(
           onPressed: () {
+            if (_images.isEmpty) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Please add at least one image')),
+              );
+              return;
+            }
+
             if (_formKey.currentState?.validate() ?? false) {
-              // handle create post logic here
               _handleSubmit();
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Unable to create post !')),
+                const SnackBar(content: Text('Unable to create post!')),
               );
             }
           },

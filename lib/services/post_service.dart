@@ -10,6 +10,28 @@ import 'package:acrilc/models/post.dart';
 
 /// Service to manage posts
 class PostService {
+  static Future<PostData?> getPost(String postId, [http.Client? client]) async {
+    final url = Uri.parse('${ENV.baseUrl}/api/posts/$postId');
+
+    final httpClient = client ?? http.Client();
+    final request = http.Request('GET', url);
+
+    String? token = await getAuthToken();
+    if (token == null) {
+      throw Exception("jwt token missing");
+    }
+    request.headers['Authorization'] = "Bearer $token";
+    final streamedResponse = await httpClient.send(request);
+    final response = await http.Response.fromStream(streamedResponse);
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> payload = jsonDecode(response.body);
+      return PostData.fromJson(payload['data']);
+    } else {
+      throw Exception(response.body);
+    }
+  }
+
   static Future<PostData> create(
     PostUploadData data, {
     http.Client? client,
@@ -26,7 +48,7 @@ class PostService {
     Map<String, String> uploadData = data.normalize();
     uploadData.forEach((key, value) {
       if (value.trim().isNotEmpty) {
-        request.fields[key] = value.toString();
+        request.fields[key] = jsonEncode(value);
       }
     });
 

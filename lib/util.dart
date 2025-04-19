@@ -30,7 +30,7 @@ void alert(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text(title),
+        title: Text(title, style: Theme.of(context).textTheme.headlineMedium,),
         content: Text(text),
         actions: [
           Row(
