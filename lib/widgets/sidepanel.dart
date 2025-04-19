@@ -1,14 +1,41 @@
+import 'package:acrilc/models/user.dart';
+import 'package:acrilc/services/auth_service.dart';
+import 'package:acrilc/services/user_service.dart';
 import 'package:acrilc/util.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SidePanel extends StatelessWidget {
+class SidePanel extends StatefulWidget {
   const SidePanel({super.key});
 
+  @override
+  State<SidePanel> createState() => _SidePanelState();
+}
+
+class _SidePanelState extends State<SidePanel> {
+  String? _username;
+  @override
+  void initState() {
+    super.initState();
+
+    _loadUserData();
+  }
+
+  void _loadUserData() async {
+    UserData? userData = await UserService.getCurrentUser();
+    if (userData == null && mounted) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Failed to load user data")));
+    }
+    setState(() {
+      _username = userData?.fullName;
+    });
+  }
+
   Future<void> _logout(BuildContext context) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove("jwt_token");
+    await AuthService.doLogout();
     if (context.mounted) context.go("/");
   }
 
@@ -27,7 +54,7 @@ class SidePanel extends StatelessWidget {
     return ListTile(title: Text(title), onTap: onTap);
   }
 
-  Widget list() { 
+  Widget list() {
     return Builder(
       builder: (context) {
         return Padding(
@@ -57,6 +84,7 @@ class SidePanel extends StatelessWidget {
       builder: (context) {
         return InkWell(
           onTap: () {
+            context.pop();
             context.push("/app/profile");
           },
           child: Container(
@@ -64,7 +92,7 @@ class SidePanel extends StatelessWidget {
             child: Row(
               children: [
                 Text(
-                  "Username",
+                  _username ?? "loading...",
                   style: Theme.of(context).textTheme.headlineLarge,
                 ),
               ],
