@@ -1,18 +1,20 @@
+import 'package:acrilc/constants/colors.dart';
+import 'package:acrilc/widgets/input.dart';
 import 'package:flutter/material.dart';
 
-class UsersChat extends StatelessWidget {
+class UserChat extends StatelessWidget {
   final String userId;
 
-  const UsersChat({super.key, required this.userId});
+  const UserChat({super.key, required this.userId});
 
   @override
   Widget build(BuildContext context) {
-    const senderColor = Color(0xFF3C3A36);
-    const receiverColor = Color(0xFFFF9F1C);
+    Color senderColor = AppColor.chatBubbleSenderColor;
+    Color receiverColor = Color(0xFFFF9F1C);
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFF12100E),
+        // backgroundColor: const Color(0xFF12100E),
         leading: IconButton(
           onPressed: () => Navigator.of(context).pop(),
           icon: const Icon(Icons.arrow_back_ios_new),
@@ -22,19 +24,13 @@ class UsersChat extends StatelessWidget {
       ),
       body: Column(
         children: [
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text("Today", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-            ),
-          ),
           Expanded(
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               children: [
                 ChatBubble(
-                  message: "Hi, I'm interested in the painting you posted. Could you send me a few more pictures of it?",
+                  message:
+                      "Hi, I'm interested in the painting you posted. Could you send me a few more pictures of it?",
                   isSender: true,
                   bubbleColor: senderColor,
                 ),
@@ -46,21 +42,41 @@ class UsersChat extends StatelessWidget {
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    Expanded(child: Image.network('https://picsum.photos/200?1', height: 140, fit: BoxFit.cover)),
+                    Expanded(
+                      child: Image.network(
+                        'https://picsum.photos/200?1',
+                        height: 140,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                     const SizedBox(width: 8),
-                    Expanded(child: Image.network('https://picsum.photos/200?2', height: 140, fit: BoxFit.cover)),
+                    Expanded(
+                      child: Image.network(
+                        'https://picsum.photos/200?2',
+                        height: 140,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                     const SizedBox(width: 8),
-                    Expanded(child: Image.network('https://picsum.photos/200?3', height: 140, fit: BoxFit.cover)),
+                    Expanded(
+                      child: Image.network(
+                        'https://picsum.photos/200?3',
+                        height: 140,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 16),
                 ChatBubble(
-                  message: "Thank you for sending these over. I'm really drawn to the one with the white background.",
+                  message:
+                      "Thank you for sending these over. I'm really drawn to the one with the white background.",
                   isSender: true,
                   bubbleColor: senderColor,
                 ),
                 ChatBubble(
-                  message: "I'm glad you like it! It’s still available if you're interested.",
+                  message:
+                      "I'm glad you like it! It’s still available if you're interested.",
                   isSender: false,
                   bubbleColor: receiverColor,
                 ),
@@ -72,27 +88,22 @@ class UsersChat extends StatelessWidget {
             child: Row(
               children: [
                 Expanded(
-                  child: TextField(
-                    style: const TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: const Color(0xFF3C3A36),
-                      hintText: "Send message",
-                      hintStyle: const TextStyle(color: Colors.white70),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(24),
-                        borderSide: BorderSide.none,
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-                    ),
+                  child: Input(
+                    searchController: TextEditingController(),
+                    onSearchChange: (String val) {},
+                    placeholder: "Send message",
+                    cornerRadius: 40,
+                    padding: 0,
+                    prefixIcon: null,
                   ),
                 ),
+
+                // const SizedBox(width: 10),
+                // const Icon(Icons.mic),
+                // const SizedBox(width: 10),
+                // const Icon(Icons.add),
                 const SizedBox(width: 10),
-                const Icon(Icons.mic, color: Colors.white70),
-                const SizedBox(width: 10),
-                const Icon(Icons.add, color: Colors.white70),
-                const SizedBox(width: 10),
-                const Icon(Icons.send, color: Colors.white70),
+                const Icon(Icons.send),
               ],
             ),
           ),
