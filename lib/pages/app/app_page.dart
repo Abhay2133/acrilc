@@ -21,9 +21,9 @@ class _AppPageState extends State<AppPage> {
   void initState() {
     super.initState();
 
-    final _socket = WebSocketService();
-    _socket.connect();
-    _socket.onAny = _onMessage;
+    final socket = WebSocketService();
+    socket.connect();
+    socket.onAny = _onMessage;
   }
 
   dynamic _onMessage(String? event, dynamic data) {

@@ -1,7 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
-import 'package:acrilc/models/post.dart';
 
 class ShowPostScreen extends StatefulWidget {
   final String postId;
