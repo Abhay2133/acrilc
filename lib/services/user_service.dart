@@ -32,7 +32,7 @@ class UserService {
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = json.decode(response.body);
       final userJson = data['data'];
-
+      
       _cachedUser = UserData.fromJson(userJson);
       return _cachedUser;
     } else {

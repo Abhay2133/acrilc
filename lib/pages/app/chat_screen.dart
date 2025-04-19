@@ -1,5 +1,7 @@
 import 'package:acrilc/constants/colors.dart';
+import 'package:acrilc/widgets/input.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 class ChatScreen extends StatelessWidget {
@@ -28,13 +30,10 @@ class ChatScreen extends StatelessWidget {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: "Search",
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-              ),
+            padding: const EdgeInsets.symmetric(vertical: 12.0),
+            child: Input(
+              searchController: TextEditingController(),
+              onSearchChange: (String val) {},
             ),
           ),
           Expanded(
@@ -54,6 +53,7 @@ class ChatScreen extends StatelessWidget {
                     style: TextStyle(color: Colors.grey[600], fontSize: 12),
                   ),
                   onTap: () {
+                    context.push("/chat/userId");
                     // Handle chat open
                   },
                 );
@@ -66,6 +66,7 @@ class ChatScreen extends StatelessWidget {
         backgroundColor: AppColor.primaryColor,
         onPressed: () {
           // Handle new chat action
+          context.push("/chat/new");
         },
         child: Icon(Icons.chat, color: Colors.white),
       ),
