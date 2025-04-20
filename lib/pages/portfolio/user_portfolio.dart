@@ -23,15 +23,6 @@
 //   }
 // }
 
-
-
-
-
-
-
-
-
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -44,7 +35,10 @@ class UserPortfolio extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Profile", style: Theme.of(context).textTheme.headlineMedium),
+        title: Text(
+          "Profile",
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
         leading: IconButton(
           onPressed: () => context.pop(),
           icon: const Icon(Icons.arrow_back_ios_new_rounded),
@@ -62,9 +56,15 @@ class UserPortfolio extends StatelessWidget {
               backgroundImage: AssetImage("assets/profile.jpg"), // Placeholder
             ),
             const SizedBox(height: 8),
-            Text("Alexis Luna", style: Theme.of(context).textTheme.headlineMedium),
+            Text(
+              "Alexis Luna",
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
             const SizedBox(height: 4),
-            Text("San Francisco, CA", style: Theme.of(context).textTheme.titleMedium),
+            Text(
+              "San Francisco, CA",
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             Text("@alexisluna", style: Theme.of(context).textTheme.titleMedium),
 
             const SizedBox(height: 12),
@@ -98,7 +98,10 @@ class UserPortfolio extends StatelessWidget {
             // Portfolio
             Align(
               alignment: Alignment.centerLeft,
-              child: Text("Portfolio", style: Theme.of(context).textTheme.headlineMedium),
+              child: Text(
+                "Portfolio",
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
             ),
             const SizedBox(height: 10),
             SizedBox(
@@ -106,8 +109,16 @@ class UserPortfolio extends StatelessWidget {
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: [
-                  _buildPortfolioCard(context, "Lost in the woods – Oil on Canvas", "\$500"),
-                  _buildPortfolioCard(context, "Summer Breeze on Paper", "\$300"),
+                  _buildPortfolioCard(
+                    context,
+                    "Lost in the woods – Oil on Canvas",
+                    "\$500",
+                  ),
+                  _buildPortfolioCard(
+                    context,
+                    "Summer Breeze on Paper",
+                    "\$300",
+                  ),
                 ],
               ),
             ),
@@ -117,17 +128,23 @@ class UserPortfolio extends StatelessWidget {
             // Forte
             Align(
               alignment: Alignment.centerLeft,
-              child: Text("Forte", style: Theme.of(context).textTheme.headlineMedium),
+              child: Text(
+                "Forte",
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
             ),
             const SizedBox(height: 8),
-            Wrap(
-              spacing: 10,
-              runSpacing: 10,
-              children: [
-                _buildForteCard(context, "Abstract Art", "Expert"),
-                _buildForteCard(context, "Impressionist", "Advanced"),
-                _buildForteCard(context, "Watercolor", "Expert"),
-              ],
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Wrap(
+                spacing: 10,
+                runSpacing: 10,
+                children: [
+                  _buildForteCard(context, "Abstract Art", "Expert"),
+                  _buildForteCard(context, "Impressionist", "Advanced"),
+                  _buildForteCard(context, "Watercolor", "Expert"),
+                ],
+              ),
             ),
 
             const SizedBox(height: 24),
@@ -135,7 +152,10 @@ class UserPortfolio extends StatelessWidget {
             // Story
             Align(
               alignment: Alignment.centerLeft,
-              child: Text("Story Behind the Art", style: Theme.of(context).textTheme.headlineMedium),
+              child: Text(
+                "Story Behind the Art",
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
             ),
             const SizedBox(height: 8),
             Text(
@@ -148,13 +168,19 @@ class UserPortfolio extends StatelessWidget {
             // Featured Works
             Align(
               alignment: Alignment.centerLeft,
-              child: Text("Featured Works", style: Theme.of(context).textTheme.headlineMedium),
+              child: Text(
+                "Featured Works",
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
             ),
             const SizedBox(height: 10),
             Wrap(
               spacing: 10,
               runSpacing: 10,
-              children: List.generate(6, (index) => _buildFeaturedWorkCard(context)),
+              children: List.generate(
+                6,
+                (index) => _buildFeaturedWorkCard(context),
+              ),
             ),
 
             const SizedBox(height: 24),
@@ -162,7 +188,10 @@ class UserPortfolio extends StatelessWidget {
             // Testimonials
             Align(
               alignment: Alignment.centerLeft,
-              child: Text("Testimonials", style: Theme.of(context).textTheme.headlineMedium),
+              child: Text(
+                "Testimonials",
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
             ),
             const SizedBox(height: 10),
             Row(
@@ -176,21 +205,29 @@ class UserPortfolio extends StatelessWidget {
             const SizedBox(height: 24),
 
             // Contact
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text("Contact me", style: Theme.of(context).textTheme.headlineMedium),
+            ListTile(
+              title: Text(
+                "Contact Me",
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
+              subtitle: Text(
+                "Send an Email",
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              trailing: Icon(Icons.arrow_forward),
             ),
-            const SizedBox(height: 4),
-            Text("Send an email", style: Theme.of(context).textTheme.titleMedium),
-
-            const SizedBox(height: 16),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text("Share portfolio link", style: Theme.of(context).textTheme.headlineMedium),
+          
+            ListTile(
+              title: Text(
+                "Share portfolio link",
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
+              subtitle: Text(
+                "alexisluna/portfolio/acrilcart",
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              trailing: Icon(Icons.arrow_forward),
             ),
-            const SizedBox(height: 4),
-            Text("alexisluna/portfolio/acrilcart", style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 40),
           ],
         ),
       ),
@@ -209,7 +246,9 @@ class UserPortfolio extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(child: Container(color: Colors.grey[400])), // Placeholder image
+          Expanded(
+            child: Container(color: Colors.grey[400]),
+          ), // Placeholder image
           const SizedBox(height: 8),
           Text(title, style: Theme.of(context).textTheme.bodyMedium),
           Text(price, style: Theme.of(context).textTheme.titleMedium),
@@ -225,14 +264,17 @@ class UserPortfolio extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade300),
+        // border: Border.all(color: Colors.grey.shade300),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title, style: Theme.of(context).textTheme.bodyMedium),
           const SizedBox(height: 4),
-          Text("Skill Level: $level", style: Theme.of(context).textTheme.titleMedium),
+          Text(
+            "Skill Level: $level",
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
         ],
       ),
     );
@@ -249,7 +291,12 @@ class UserPortfolio extends StatelessWidget {
     );
   }
 
-  Widget _buildTestimonialCard(BuildContext context, String brand, String date, int stars) {
+  Widget _buildTestimonialCard(
+    BuildContext context,
+    String brand,
+    String date,
+    int stars,
+  ) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(12),
@@ -259,7 +306,11 @@ class UserPortfolio extends StatelessWidget {
         ),
         child: Column(
           children: [
-            Icon(Icons.business, size: 40, color: Theme.of(context).primaryColor),
+            Icon(
+              Icons.business,
+              size: 40,
+              color: Theme.of(context).primaryColor,
+            ),
             const SizedBox(height: 8),
             Text("$brand -", style: Theme.of(context).textTheme.bodyMedium),
             Text(date, style: Theme.of(context).textTheme.titleMedium),

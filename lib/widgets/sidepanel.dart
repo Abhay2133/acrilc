@@ -39,10 +39,6 @@ class SidePanel extends StatelessWidget {
                 Navigator.pop(context);
                 context.push("/settings");
               }),
-              listItem("Portfolio", () {
-                Navigator.pop(context);
-                context.push("/portfolio/AmitKoli");
-              }),
               listItem("Analytics", () {
                 alert(context, "Stay tuned", title: "Coming soon");
               }),

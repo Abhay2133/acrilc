@@ -1,3 +1,4 @@
+import 'package:acrilc/constants/colors.dart';
 import 'package:acrilc/models/user.dart';
 import 'package:acrilc/services/user_service.dart';
 import 'package:acrilc/util.dart';
@@ -5,6 +6,7 @@ import 'package:acrilc/widgets/carousel.dart';
 import 'package:acrilc/widgets/circular_tag.dart';
 import 'package:acrilc/widgets/img.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -138,7 +140,7 @@ class ProfileWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  "Testimonoial",
+                  "Testimonial",
                   style: Theme.of(context).textTheme.headlineLarge,
                 ),
               ],
@@ -150,13 +152,14 @@ class ProfileWidget extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFFE34A1C),
+                backgroundColor: AppColor.colorPrimaryButton,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(200), // Set border radius
                 ),
               ),
               onPressed: () {
-                alert(context, "Hello");
+                // alert(context, "Hello");
+                context.push("/portfolio/me");
               },
               child: Container(
                 height: 50,
@@ -404,10 +407,11 @@ class Forte extends StatelessWidget {
         children: [
           Text("Forte", style: Theme.of(context).textTheme.headlineLarge),
           SizedBox(height: 20),
-          Row(
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
             children: [
               Expanded(child: card(context, "Painting", "Abstract Painting")),
-              SizedBox(width: 10),
               Expanded(child: card(context, "Sculpture", "Sculptures")),
             ],
           ),
