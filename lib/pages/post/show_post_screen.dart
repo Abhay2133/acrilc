@@ -1,6 +1,9 @@
 import 'package:acrilc/constants/colors.dart';
 import 'package:acrilc/models/post.dart';
+import 'package:acrilc/models/user.dart';
 import 'package:acrilc/services/post_service.dart';
+import 'package:acrilc/services/user_service.dart';
+import 'package:acrilc/util.dart';
 import 'package:acrilc/widgets/buttons.dart';
 import 'package:acrilc/widgets/spinner.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -21,14 +24,28 @@ class _ShowPostScreenState extends State<ShowPostScreen> {
   late PostData _postData;
   bool _isLoading = true;
   bool _isFailed = false;
+  bool _isMyPost = false;
 
   @override
   void initState() {
     super.initState();
-    _fetchPost();
+    _init();
   }
 
-  void _fetchPost() async {
+  void _init() async {
+    await _fetchPost();
+    _authorize();
+  }
+
+  void _authorize() async {
+    UserData? me = await UserService.getCurrentUser();
+    if (_isFailed || me == null) return;
+    setState(() {
+      _isMyPost = me.id == _postData.author;
+    });
+  }
+
+  Future<void> _fetchPost() async {
     try {
       PostData? data = await PostService.getPost(widget.postId);
       if (data == null) {
@@ -49,9 +66,40 @@ class _ShowPostScreenState extends State<ShowPostScreen> {
     }
   }
 
+  void _deletePost() async {
+    bool confirmed = await confirm(
+      context: context,
+      title: "Delete Post",
+      body: "This Action cannot be undone. Are you sure ?",
+    );
+    if (!confirmed) return;
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+      await PostService.deletePost(widget.postId);
+      if (mounted) {
+        context.pop();
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Post Deleted")));
+      }
+    } catch (e) {
+      if (mounted) {
+        alert(context, "$e");
+      }
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
   void _onMenuSelected(String value) {
     // You can handle your logic here
-    print("Selected: $value");
+    if (value == "delete") {
+      _deletePost();
+    }
   }
 
   @override
@@ -89,6 +137,9 @@ class _ShowPostScreenState extends State<ShowPostScreen> {
             icon: Icon(Icons.more_vert),
             itemBuilder:
                 (BuildContext context) => [
+                  ...(_isMyPost
+                      ? [PopupMenuItem(value: 'edit', child: Text('Edit'))]
+                      : []),
                   PopupMenuItem(value: 'secure_it', child: Text('Secure it')),
                   PopupMenuItem(
                     value: 'moodboard',
@@ -98,11 +149,18 @@ class _ShowPostScreenState extends State<ShowPostScreen> {
                     value: 'storyboard',
                     child: Text('Move to Storyboard'),
                   ),
+                  ...(_isMyPost
+                      ? [PopupMenuItem(value: 'delete', child: Text('Delete'))]
+                      : []),
                 ],
           ),
           SizedBox(width: 8),
         ],
         elevation: 0,
+        // title: Text(
+        //   widget.postId,
+        //   style: Theme.of(context).textTheme.bodySmall,
+        // ),
       ),
       body: _isLoading ? Center(child: Spinner(size: 30)) : _postBody(context),
     );
@@ -133,6 +191,7 @@ class _ShowPostScreenState extends State<ShowPostScreen> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
                               color: Colors.transparent,
+                              border: Border.all(color: AppColor.lightBorder),
                             ),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(12),

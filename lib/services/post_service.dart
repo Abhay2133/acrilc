@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:acrilc/constants/env.dart';
 import 'package:acrilc/util.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mime/mime.dart';
 import 'package:path/path.dart' as path;
@@ -85,5 +86,27 @@ class PostService {
       return MediaType.parse(mimeStr);
     }
     return null;
+  }
+
+  // delete post
+  static Future<void> deletePost(String postId, {http.Client? client}) async {
+    final url = Uri.parse('${ENV.baseUrl}/api/posts/$postId');
+    final httpClient = client ?? http.Client();
+    final request = http.MultipartRequest('DELETE', url);
+    
+    String? token = await getAuthToken();
+    if (token == null) {
+      throw Exception("jwt token missing");
+    }
+    
+    request.headers['Authorization'] = "Bearer $token";
+
+    final streamedResponse = await httpClient.send(request);
+    final response = await http.Response.fromStream(streamedResponse);
+
+    if (response.statusCode == 200) {
+    } else {
+      throw Exception(response.body);
+    }
   }
 }
