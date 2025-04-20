@@ -112,4 +112,9 @@ class AppColor {
     dark: const Color(0xFFFF9F1C), // neutral100
     light: const Color(0xFFFF9F1C), // neutral200
   );
+
+  static Color get colorPrimaryButton => _themeColor(
+    dark: const Color(0xFFE34A1C), // neutral100
+    light: const Color(0xFFFF9F1C), // neutral200
+  );
 }
