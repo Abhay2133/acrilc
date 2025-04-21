@@ -180,7 +180,7 @@ class _ShowPostScreenState extends State<ShowPostScreen> {
             items:
                 _postData.media
                     ?.where((media) => media['type'] == "image")
-                    ?.toList()
+                    .toList()
                     .map((i) {
                       return Builder(
                         builder: (BuildContext context) {

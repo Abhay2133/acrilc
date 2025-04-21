@@ -1,18 +1,13 @@
-import 'dart:convert';
 
 import 'package:acrilc/constants/colors.dart';
-import 'package:acrilc/constants/env.dart';
 import 'package:acrilc/services/auth_service.dart';
 import 'package:acrilc/services/log_service.dart';
 import 'package:acrilc/services/user_service.dart';
-import 'package:acrilc/util.dart';
 import 'package:acrilc/widgets/buttons.dart';
 import 'package:acrilc/widgets/inputs.dart';
 import 'package:acrilc/widgets/starting_bg.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

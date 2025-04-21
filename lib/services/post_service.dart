@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:acrilc/constants/env.dart';
 import 'package:acrilc/util.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mime/mime.dart';
 import 'package:path/path.dart' as path;
