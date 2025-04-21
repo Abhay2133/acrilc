@@ -37,7 +37,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   Future<void> _pickImages() async {
     final pickedFiles = await picker.pickMultiImage();
 
-    if (pickedFiles != null && pickedFiles.isNotEmpty) {
+    if (pickedFiles.isNotEmpty) {
       // Filter out unsupported file types
       final filteredFiles =
           pickedFiles.where((file) {

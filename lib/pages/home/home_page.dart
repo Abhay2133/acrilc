@@ -36,20 +36,12 @@ class _HomePageState extends State<HomePage> {
             SizedBox(height: 40),
             Text(
               "Hello, Welcome",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: AppColor.primaryText,
-              ),
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
             SizedBox(height: 20),
             Text(
               "where art find its audience",
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: AppColor.primaryText,
-              ),
+              style: Theme.of(context).textTheme.bodyLarge,
             ),
             // SizedBox(height: 10,),
             SizedBox(height: 30),

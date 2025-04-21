@@ -4,7 +4,6 @@ import 'package:acrilc/services/user_service.dart';
 import 'package:acrilc/util.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SidePanel extends StatefulWidget {
   const SidePanel({super.key});

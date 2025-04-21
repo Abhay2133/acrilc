@@ -3,7 +3,7 @@ import 'package:acrilc/services/websocket_service.dart';
 import 'package:acrilc/widgets/sidepanel.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:socket_io_client/socket_io_client.dart'; // show GoRouterHelper, GoRouterState;
+// show GoRouterHelper, GoRouterState;
 
 enum Page { home, discover, post, chat, profile }
 
