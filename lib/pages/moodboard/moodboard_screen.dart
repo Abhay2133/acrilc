@@ -52,9 +52,9 @@ class _MoodboardScreenState extends State<MoodboardScreen> {
                   onTap: () {
                     _pageController.animateToPage(index,
                         duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-                    setState(() {
-                      _currentIndex = index;
-                    });
+                    // setState(() {
+                    //   _currentIndex = index;
+                    // });
                   },
                   child: Container(
                     margin: const EdgeInsets.symmetric(horizontal: 8),
@@ -90,7 +90,7 @@ class _MoodboardScreenState extends State<MoodboardScreen> {
                 });
               },
               children: tabs
-                  .map((tab) => MoodTab(userId: widget.userId, tabName: tab))
+                  .map((tab) => MoobPage(userId: widget.userId, tabName: tab))
                   .toList(),
             ),
           ),
@@ -100,31 +100,31 @@ class _MoodboardScreenState extends State<MoodboardScreen> {
   }
 }
 
-class MoodTab extends StatelessWidget {
+class MoobPage extends StatelessWidget {
   final String userId;
   final String tabName;
 
-  const MoodTab({super.key, required this.userId, required this.tabName});
+  const MoobPage({super.key, required this.userId, required this.tabName});
 
   final List<Map<String, dynamic>> artists = const [
     {
       "name": "Sambit Ghosh",
       "status": "Supporting",
       "images": [
-        {"title": "Kalamkari Art Print", "url": "https://source.unsplash.com/random/200x200?art"},
-        {"title": "Ceramic Vase", "url": "https://source.unsplash.com/random/201x201?ceramic"},
-        {"title": "Digital Art", "url": "https://source.unsplash.com/random/202x202?digital"},
-        {"title": "Ceramic Vase", "url": "https://source.unsplash.com/random/203x203?vase"},
+        {"title": "Kalamkari Art Print", "url": "https://i.pinimg.com/474x/7c/04/fd/7c04fd414c43dbfa2789e40fa961a46e.jpg"},
+        {"title": "Ceramic Vase", "url": "https://i.pinimg.com/474x/6e/15/76/6e1576371eba134fc2fee0041b818a89.jpg"},
+        {"title": "Digital Art", "url": "https://i.pinimg.com/474x/0b/e8/19/0be819d93d696173b276c5aa0d5c5d28.jpg"},
+        {"title": "Ceramic Vase", "url": "https://i.pinimg.com/474x/8c/8f/cd/8c8fcd2685a142ee5af8876bb5263ada.jpg"},
       ],
     },
     {
       "name": "Edward Snowden",
       "status": "Support",
       "images": [
-        {"title": "Painting", "url": "https://source.unsplash.com/random/204x204?painting"},
-        {"title": "Terracotta Horse", "url": "https://source.unsplash.com/random/205x205?terracotta"},
-        {"title": "Kathakali Painting", "url": "https://source.unsplash.com/random/206x206?kathakali"},
-        {"title": "Craft", "url": "https://source.unsplash.com/random/207x207?craft"},
+        {"title": "Painting", "url": "https://i.pinimg.com/474x/bb/0c/b9/bb0cb9d46260f9189d5078f36a090c2a.jpg"},
+        {"title": "Terracotta Horse", "url": "https://i.pinimg.com/474x/7e/74/b1/7e74b1bda919d12a212df24ea920afe3.jpg"},
+        {"title": "Kathakali Painting", "url": "https://i.pinimg.com/474x/21/52/05/215205fa5fedbcbb0d0cdfe2f09a76f4.jpg"},
+        {"title": "Craft", "url": "https://i.pinimg.com/474x/7c/04/fd/7c04fd414c43dbfa2789e40fa961a46e.jpg"},
       ],
     },
   ];
