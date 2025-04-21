@@ -65,6 +65,10 @@ class _SidePanelState extends State<SidePanel> {
                 Navigator.pop(context);
                 context.push("/settings");
               }),
+              listItem("Moodboard", () {
+                Navigator.pop(context);
+                context.push("/moodboard/amit");
+              }),
               listItem("Analytics", () {
                 alert(context, "Stay tuned", title: "Coming soon");
               }),

@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:acrilc/constants/colors.dart';
 import 'package:acrilc/constants/env.dart';
+import 'package:acrilc/services/auth_service.dart';
 import 'package:acrilc/services/log_service.dart';
+import 'package:acrilc/services/user_service.dart';
 import 'package:acrilc/util.dart';
 import 'package:acrilc/widgets/buttons.dart';
 import 'package:acrilc/widgets/inputs.dart';
@@ -27,47 +29,35 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController _passwordController = TextEditingController();
   bool isLoading = false;
 
+  Future<bool> _loadUserData() async {
+    try {
+      await UserService.getCurrentUser();
+      return true;
+    } catch (e) {
+      if (mounted)
+        alert(context, e.toString(), title: "Failed to load user-data");
+      return false;
+    }
+  }
+
   Future<void> _signup() async {
     if (_formKey.currentState!.validate()) {
       setState(() {
         isLoading = true;
       });
-      final String apiUrl =
-          "${ENV.baseUrl}/auth/signup"; // Replace with actual hostname
-      final Map<String, String> requestBody = {
-        "fullName": _nameController.text.trim(),
-        "email": _uuidController.text.trim(),
-        "password": _passwordController.text.trim(),
-      };
-
       try {
-        final response = await http.post(
-          Uri.parse(apiUrl),
-          headers: {"Content-Type": "application/json"},
-          body: jsonEncode(requestBody),
+        bool success = await AuthService.doSignup(
+          password: _passwordController.text.trim(),
+          email: _uuidController.text.trim(),
+          fullName: _nameController.text.trim(),
         );
-
-        final responseData = tryEncodeJson(response.body);
-        if (response.statusCode == 201) {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          await prefs.setString("jwt_token", responseData['token']);
-          if (mounted) context.go("/app/home");
-          // You can navigate to another screen here
-        } else {
-          // Handle login error
-          LogService.error("Login Failed: ${response.body}");
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Signup Failed: ${responseData["msg"]}")),
-            );
-          }
+        if (success) {
+          bool dataLoaded = await _loadUserData();
+          if (mounted && dataLoaded) context.go("/app/home");
         }
       } catch (e) {
         LogService.error("Error: $e");
         if (mounted) {
-          // ScaffoldMessenger.of(context).showSnackBar(
-          //   SnackBar(content: Text("An error occurred. Please try again.")),
-          // );
           alert(context, e.toString(), title: "Error Message", copy: true);
         }
       } finally {
@@ -93,20 +83,12 @@ class _SignupPageState extends State<SignupPage> {
                 SizedBox(height: 40),
                 Text(
                   "Welcome to Acrilc",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: AppColor.primaryText,
-                  ),
+                  style: Theme.of(context).textTheme.headlineMedium,
                 ),
                 SizedBox(height: 5),
                 Text(
                   "where art find its audience",
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: AppColor.primaryText,
-                  ),
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 SizedBox(height: 40),
                 Form(
@@ -131,7 +113,7 @@ class _SignupPageState extends State<SignupPage> {
                 SizedBox(height: 50),
               ],
             ),
-            ],
+          ],
         ),
         showBackButton: true,
       ),
@@ -150,7 +132,7 @@ class _SignupPageState extends State<SignupPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
           children: [
-            Text("Signup", style: TextStyle(color: Colors.white)),
+            Text("Signup", style: Theme.of(context).textTheme.headlineMedium),
             isLoading
                 ? Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -175,6 +157,7 @@ class _SignupPageState extends State<SignupPage> {
         children: [
           formLabel(label),
           InputField(
+            style: Theme.of(context).textTheme.bodyLarge,
             controller: controller,
             hintText: '',
             isPassword: isPassword,
@@ -187,7 +170,7 @@ class _SignupPageState extends State<SignupPage> {
   Widget formLabel(String text) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
-      child: Text(text, style: TextStyle(color: AppColor.primaryText)),
+      child: Text(text, style: Theme.of(context).textTheme.bodyLarge),
     );
   }
 }

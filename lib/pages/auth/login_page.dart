@@ -70,20 +70,12 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(height: 40),
                 Text(
                   "Welcome to Acrilc",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: AppColor.primaryText,
-                  ),
+                  style: Theme.of(context).textTheme.headlineMedium
                 ),
                 SizedBox(height: 5),
                 Text(
                   "where art find its audience",
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: AppColor.primaryText,
-                  ),
+                  style: Theme.of(context).textTheme.bodyLarge
                 ),
                 SizedBox(height: 40),
                 Form(
@@ -111,7 +103,7 @@ class _LoginPageState extends State<LoginPage> {
                             children: [
                               Text(
                                 "Login",
-                                style: TextStyle(color: Colors.white),
+                                style: Theme.of(context).textTheme.headlineMedium
                               ),
                               isLoading
                                   ? Padding(
@@ -162,6 +154,7 @@ class _LoginPageState extends State<LoginPage> {
         children: [
           formLabel(label),
           InputField(
+            style: Theme.of(context).textTheme.bodyLarge,
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'This field is required';
@@ -180,7 +173,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget formLabel(String text) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
-      child: Text(text, style: TextStyle(color: AppColor.primaryText)),
+      child: Text(text, style: Theme.of(context).textTheme.headlineMedium),
     );
   }
 }
