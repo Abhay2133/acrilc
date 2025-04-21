@@ -43,7 +43,39 @@ class AuthService {
     }
   }
 
-  static Future<void> doSignup(String email, String password) async {}
+  static Future<bool> doSignup({
+    String email = "",
+    String password = "",
+    String fullName = "",
+    void Function(http.Response)? onSuccess,
+    void Function(http.Response)? onFail,
+  }) async {
+    final String apiUrl =
+        "${ENV.baseUrl}/auth/signup"; // Replace with actual hostname
+    final Map<String, String> requestBody = {
+      "fullName": fullName,
+      "email": email,
+      "password": password,
+    };
+
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(requestBody),
+    );
+
+    final responseData = tryEncodeJson(response.body);
+    if (response.statusCode == 201) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString("jwt_token", responseData['token']);
+
+      if (onSuccess != null) onSuccess(response);
+      return true;
+    } else {
+      if (onFail != null) onFail(response);
+      return false;
+    }
+  }
 
   static Future<void> doLogout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
