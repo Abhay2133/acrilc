@@ -4,6 +4,7 @@ import 'package:acrilc/pages/app/home_screen.dart';
 import 'package:acrilc/pages/app/profile_screen.dart';
 import 'package:acrilc/pages/chat/user_chat.dart';
 import 'package:acrilc/pages/chat/users_list.dart';
+import 'package:acrilc/pages/moodboard/moodboard_screen.dart';
 import 'package:acrilc/pages/portfolio/user_portfolio.dart';
 import 'package:acrilc/pages/post/create_post_screen.dart';
 import 'package:acrilc/pages/post/show_post_screen.dart';
@@ -102,6 +103,12 @@ class AppRouter {
       _buildARoute("/portfolio/:userId", null, builder: (context, state){
         final String userId = state.pathParameters["userId"] ?? "";
         return UserPortfolio(userId: userId,);
+      }),
+
+      // moodboard route
+      _buildARoute("/moodboard/:userId", null, builder: (context, state){
+        final String userId = state.pathParameters["userId"] ?? "";
+        return MoodboardScreen(userId: userId,);
       })
 
     ],
