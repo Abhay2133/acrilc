@@ -87,6 +87,11 @@ class AppColor {
   );
 
   // Border Colors
+  static Color get lightBorder => _themeColor(
+    dark: const Color(0x33ffffff), // neutral400
+    light: const Color(0x00033000), // neutral300
+  );
+
   static Color get primaryBorder => _themeColor(
     dark: const Color(0xFF5A5A5A), // neutral400
     light: const Color(0xFFD4D4D4), // neutral300

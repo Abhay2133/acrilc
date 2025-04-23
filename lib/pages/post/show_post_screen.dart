@@ -1,7 +1,10 @@
 import 'package:acrilc/constants/colors.dart';
 import 'package:acrilc/models/post.dart';
+import 'package:acrilc/models/user.dart';
+import 'package:acrilc/pages/post/create_post_screen.dart';
 import 'package:acrilc/services/post_service.dart';
-import 'package:acrilc/widgets/buttons.dart';
+import 'package:acrilc/services/user_service.dart';
+import 'package:acrilc/util.dart';
 import 'package:acrilc/widgets/spinner.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:go_router/go_router.dart';
@@ -21,22 +24,42 @@ class _ShowPostScreenState extends State<ShowPostScreen> {
   late PostData _postData;
   bool _isLoading = true;
   bool _isFailed = false;
+  bool _isMyPost = false;
 
   @override
   void initState() {
     super.initState();
-    _fetchPost();
+    _init();
   }
 
-  void _fetchPost() async {
+  void _init() async {
+    await _fetchPost();
+    _authorize();
+  }
+
+  void _authorize() async {
+    UserData? me = await UserService.getCurrentUser();
+    if (_isFailed || me == null) return;
+    setState(() {
+      _isMyPost = me.id == _postData.author;
+    });
+  }
+
+  Future<void> _fetchPost() async {
     try {
+      setState(() {
+        _isLoading = true;
+        _isFailed = false;
+      });
       PostData? data = await PostService.getPost(widget.postId);
       if (data == null) {
         setState(() {
           _isFailed = true;
         });
       } else {
-        _postData = data;
+        setState(() {
+          _postData = data;
+        });
       }
     } catch (e) {
       setState(() {
@@ -49,9 +72,56 @@ class _ShowPostScreenState extends State<ShowPostScreen> {
     }
   }
 
+  void _deletePost() async {
+    bool confirmed = await confirm(
+      context: context,
+      title: "Delete Post",
+      body: "This Action cannot be undone. Are you sure ?",
+    );
+    if (!confirmed) return;
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+      await PostService.deletePost(widget.postId);
+      if (mounted) {
+        context.pop();
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Post Deleted")));
+      }
+    } catch (e) {
+      if (mounted) {
+        alert(context, "$e");
+      }
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
   void _onMenuSelected(String value) {
     // You can handle your logic here
-    print("Selected: $value");
+    if (value == "delete") {
+      _deletePost();
+    } else if (value == "edit") {
+      _editPost();
+    }
+  }
+
+  void _editPost() async {
+    PostData? postData = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CreatePostScreen(postData: _postData),
+      ),
+    );
+    if (postData != null) {
+      setState(() {
+        _postData = postData;
+      });
+    }
   }
 
   @override
@@ -89,6 +159,9 @@ class _ShowPostScreenState extends State<ShowPostScreen> {
             icon: Icon(Icons.more_vert),
             itemBuilder:
                 (BuildContext context) => [
+                  ...(_isMyPost
+                      ? [PopupMenuItem(value: 'edit', child: Text('Edit'))]
+                      : []),
                   PopupMenuItem(value: 'secure_it', child: Text('Secure it')),
                   PopupMenuItem(
                     value: 'moodboard',
@@ -98,11 +171,18 @@ class _ShowPostScreenState extends State<ShowPostScreen> {
                     value: 'storyboard',
                     child: Text('Move to Storyboard'),
                   ),
+                  ...(_isMyPost
+                      ? [PopupMenuItem(value: 'delete', child: Text('Delete'))]
+                      : []),
                 ],
           ),
           SizedBox(width: 8),
         ],
         elevation: 0,
+        title: Text(
+          widget.postId,
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
       ),
       body: _isLoading ? Center(child: Spinner(size: 30)) : _postBody(context),
     );
@@ -133,6 +213,7 @@ class _ShowPostScreenState extends State<ShowPostScreen> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
                               color: Colors.transparent,
+                              border: Border.all(color: AppColor.lightBorder),
                             ),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(12),
@@ -149,29 +230,6 @@ class _ShowPostScreenState extends State<ShowPostScreen> {
                     .toList(),
           ),
 
-          // Positioned(
-          //   top: 16,
-          //   right: 16,
-          //   child: Container(
-          //     padding: const EdgeInsets.all(12),
-          //     decoration: BoxDecoration(
-          //       color: Colors.white.withOpacity(0.9),
-          //       borderRadius: BorderRadius.circular(12),
-          //     ),
-          //     child: Column(
-          //       crossAxisAlignment: CrossAxisAlignment.start,
-          //       children: const [
-          //         Text(
-          //           "Secure It",
-          //           style: TextStyle(fontWeight: FontWeight.bold),
-          //         ),
-          //         SizedBox(height: 8),
-          //         Text("Save to Moodboard"),
-          //         Text("Move to Storyboard"),
-          //       ],
-          //     ),
-          //   ),
-          // ),
           const SizedBox(height: 24),
 
           // Title

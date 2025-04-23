@@ -30,7 +30,7 @@ void alert(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text(title, style: Theme.of(context).textTheme.headlineMedium,),
+        title: Text(title, style: Theme.of(context).textTheme.headlineMedium),
         content: Text(text),
         actions: [
           Row(
@@ -73,4 +73,39 @@ Future<String?> getAuthToken() async {
   final token = prefs.getString('jwt_token');
 
   return token;
+}
+
+Future<bool> confirm({
+  required BuildContext context,
+  required String title,
+  required String body,
+}) async {
+  final result = await showDialog<bool>(
+    context: context,
+    builder: (BuildContext dialogContext) {
+      return AlertDialog(
+        title: Text(title, style: Theme.of(context).textTheme.headlineMedium),
+        content: Text(body, style: Theme.of(context).textTheme.bodyMedium),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(
+              'Cancel',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: Text(
+              'Confirm',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          ),
+        ],
+      );
+    },
+  );
+
+  return result ??
+      false; // return false if dialog is dismissed without selection
 }

@@ -7,11 +7,10 @@ class InputField extends TextFormField {
     required TextEditingController super.controller,
     required String hintText,
     bool isPassword = false,
-    TextStyle? style,
+    super.style,
     super.validator,
   }) : super(
          obscureText: isPassword,
-         style: style,
          decoration: InputDecoration(
            hintText: hintText,
            hintStyle: TextStyle(color: Colors.white70),

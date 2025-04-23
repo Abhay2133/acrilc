@@ -1,3 +1,6 @@
+import 'dart:typed_data';
+
+import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 import 'dart:io';
 
@@ -10,15 +13,94 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:acrilc/models/post.dart';
+import 'package:path_provider/path_provider.dart';
 
 class CreatePostScreen extends StatefulWidget {
-  const CreatePostScreen({super.key});
+  final PostData? postData;
+  const CreatePostScreen({super.key, this.postData});
 
   @override
   State<CreatePostScreen> createState() => _CreatePostScreenState();
 }
 
 class _CreatePostScreenState extends State<CreatePostScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.postData == null) return;
+    isLoadingImages = true;
+
+    List<String> urls = [];
+    for (int i = 0; i < widget.postData!.media!.length; i++) {
+      Map<String, dynamic> media = widget.postData!.media![i];
+      if (media.containsKey("type") && media['type'] == 'image') {
+        urls.add(media['url']);
+      }
+    }
+
+    _downloadImages(urls);
+    _titleController.text = widget.postData?.title ?? "";
+    _storyController.text = widget.postData?.story ?? "";
+    _sizeController.text = widget.postData?.size ?? "";
+    _tags.addAll(widget.postData?.hashTags ?? []);
+    _selectedForte = "Digital"; //widget.postData?.forte ?? "";
+  }
+
+  void _downloadImages(List<String>? urls) async {
+    if (urls == null || urls.isEmpty) {
+      setState(() {
+        isLoadingImages = false;
+        isLoadingImagesFailed = true;
+      });
+      return;
+    }
+
+    setState(() {
+      isLoadingImages = true;
+      isLoadingImagesFailed = false;
+    });
+
+    List<XFile> loadedImage = [];
+
+    try {
+      final tempDir = await getTemporaryDirectory();
+
+      for (int i = 0; i < urls.length; i++) {
+        final url = urls[i];
+
+        final response = await http.get(Uri.parse(url));
+
+        if (response.statusCode == 200) {
+          Uint8List bytes = response.bodyBytes;
+
+          String filePath = '${tempDir.path}/downloaded_image_$i.jpg';
+          File file = File(filePath);
+          await file.writeAsBytes(bytes);
+
+          loadedImage.add(XFile(file.path));
+        } else {
+          print("Failed to download image at $url");
+        }
+      }
+
+      setState(() {
+        _images.addAll(loadedImage);
+        isLoadingImages = false;
+        isLoadingImagesFailed = false;
+      });
+    } catch (e) {
+      print("Error downloading images: $e");
+      setState(() {
+        isLoadingImages = false;
+        isLoadingImagesFailed = true;
+      });
+    }
+  }
+
+  bool isLoadingImages = false;
+  bool isLoadingImagesFailed = false;
+
   final _formKey = GlobalKey<FormState>();
   final List<XFile> _images = [];
   final picker = ImagePicker();
@@ -64,26 +146,34 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   Future<dynamic> _handleSubmit() async {
     if (isLoading == true) return;
     try {
+      PostUploadData payload = PostUploadData(
+        title: _titleController.text.trim(),
+        hashTags: _tags,
+        story: _storyController.text.trim(),
+        size: _sizeController.text.trim(),
+        forte: _selectedForte ?? '',
+        files: _images.map((img) => img.path).toList(),
+      );
       setState(() {
         isLoading = true;
       });
-      final post = await PostService.create(
-        PostUploadData(
-          title: _titleController.text.trim(),
-          hashTags: _tags,
-          story: _storyController.text.trim(),
-          size: _sizeController.text.trim(),
-          forte: _selectedForte ?? '',
-          files: _images.map((img) => img.path).toList(),
-        ),
-      );
+      PostData post;
+      if (widget.postData == null) {
+        post = await PostService.create(payload);
+      } else {
+        post = await PostService.update(widget.postData?.id ?? "", payload);
+      }
 
       if (mounted) {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text("Post created successfully")));
         String postId = post.id ?? "";
-        context.replace("/post/$postId");
+        if (widget.postData == null) {
+          context.replace("/post/$postId");
+        } else {
+          Navigator.pop(context, post);
+        }
       }
     } catch (e) {
       print('Error creating post: $e');
@@ -117,9 +207,11 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.close),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            Navigator.pop(context, "null");
+          },
         ),
-        title: const Text('Create Post'),
+        title: Text(widget.postData == null ? 'Create Post' : 'Update Post'),
       ),
       body: Form(
         key: _formKey,
@@ -237,7 +329,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Create Post',
+                widget.postData == null ? 'Create Post' : 'Update Post',
                 style: Theme.of(context).textTheme.bodyMedium!.apply(
                   color: Colors.white,
                   fontWeightDelta: 500,
