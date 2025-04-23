@@ -1,4 +1,7 @@
 import 'dart:math';
+import 'package:acrilc/constants/sample.dart';
+import 'package:acrilc/pages/post/create_post_screen.dart';
+import 'package:acrilc/services/log_service.dart';
 import 'package:acrilc/services/websocket_service.dart';
 import 'package:acrilc/widgets/sidepanel.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +27,21 @@ class _AppPageState extends State<AppPage> {
     final socket = WebSocketService();
     socket.connect();
     socket.onAny = _onMessage;
+
+  Future.delayed(Duration(seconds: 1), (){
+    // _testEditPost();
+  });
+  }
+
+  void _testEditPost() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CreatePostScreen(postData: samplePost),
+      ),
+    );
+
+    LogService.debug(result);
   }
 
   dynamic _onMessage(String? event, dynamic data) {

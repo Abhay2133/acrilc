@@ -34,8 +34,9 @@ class _SignupPageState extends State<SignupPage> {
       await UserService.getCurrentUser();
       return true;
     } catch (e) {
-      if (mounted)
+      if (mounted) {
         alert(context, e.toString(), title: "Failed to load user-data");
+      }
       return false;
     }
   }

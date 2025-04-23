@@ -1,10 +1,10 @@
 import 'package:acrilc/constants/colors.dart';
 import 'package:acrilc/models/post.dart';
 import 'package:acrilc/models/user.dart';
+import 'package:acrilc/pages/post/create_post_screen.dart';
 import 'package:acrilc/services/post_service.dart';
 import 'package:acrilc/services/user_service.dart';
 import 'package:acrilc/util.dart';
-import 'package:acrilc/widgets/buttons.dart';
 import 'package:acrilc/widgets/spinner.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:go_router/go_router.dart';
@@ -47,13 +47,19 @@ class _ShowPostScreenState extends State<ShowPostScreen> {
 
   Future<void> _fetchPost() async {
     try {
+      setState(() {
+        _isLoading = true;
+        _isFailed = false;
+      });
       PostData? data = await PostService.getPost(widget.postId);
       if (data == null) {
         setState(() {
           _isFailed = true;
         });
       } else {
-        _postData = data;
+        setState(() {
+          _postData = data;
+        });
       }
     } catch (e) {
       setState(() {
@@ -99,6 +105,22 @@ class _ShowPostScreenState extends State<ShowPostScreen> {
     // You can handle your logic here
     if (value == "delete") {
       _deletePost();
+    } else if (value == "edit") {
+      _editPost();
+    }
+  }
+
+  void _editPost() async {
+    PostData? postData = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CreatePostScreen(postData: _postData),
+      ),
+    );
+    if (postData != null) {
+      setState(() {
+        _postData = postData;
+      });
     }
   }
 
@@ -157,10 +179,10 @@ class _ShowPostScreenState extends State<ShowPostScreen> {
           SizedBox(width: 8),
         ],
         elevation: 0,
-        // title: Text(
-        //   widget.postId,
-        //   style: Theme.of(context).textTheme.bodySmall,
-        // ),
+        title: Text(
+          widget.postId,
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
       ),
       body: _isLoading ? Center(child: Spinner(size: 30)) : _postBody(context),
     );
@@ -208,29 +230,6 @@ class _ShowPostScreenState extends State<ShowPostScreen> {
                     .toList(),
           ),
 
-          // Positioned(
-          //   top: 16,
-          //   right: 16,
-          //   child: Container(
-          //     padding: const EdgeInsets.all(12),
-          //     decoration: BoxDecoration(
-          //       color: Colors.white.withOpacity(0.9),
-          //       borderRadius: BorderRadius.circular(12),
-          //     ),
-          //     child: Column(
-          //       crossAxisAlignment: CrossAxisAlignment.start,
-          //       children: const [
-          //         Text(
-          //           "Secure It",
-          //           style: TextStyle(fontWeight: FontWeight.bold),
-          //         ),
-          //         SizedBox(height: 8),
-          //         Text("Save to Moodboard"),
-          //         Text("Move to Storyboard"),
-          //       ],
-          //     ),
-          //   ),
-          // ),
           const SizedBox(height: 24),
 
           // Title
