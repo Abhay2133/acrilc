@@ -49,7 +49,7 @@ class _SignupPageState extends State<SignupPage> {
         );
         if (success) {
           bool dataLoaded = await _loadUserData();
-          if (mounted && dataLoaded) context.go("/app/home");
+          if (mounted && dataLoaded) context.go("/app/continuation");
         }
       } catch (e) {
         LogService.error("Error: $e");

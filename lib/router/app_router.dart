@@ -4,6 +4,7 @@ import 'package:acrilc/pages/app/home_screen.dart';
 import 'package:acrilc/pages/app/profile_screen.dart';
 import 'package:acrilc/pages/chat/user_chat.dart';
 import 'package:acrilc/pages/chat/users_list.dart';
+import 'package:acrilc/pages/app/continuation_screen.dart';
 import 'package:acrilc/pages/moodboard/moodboard_screen.dart';
 import 'package:acrilc/pages/portfolio/user_portfolio.dart';
 import 'package:acrilc/pages/post/create_post_screen.dart';
@@ -76,6 +77,8 @@ class AppRouter {
       _buildARoute("/settings/account_security", AccountSecurityPage()),
       _buildARoute("/settings/preferences", PreferencesSettingsPage()),
       _buildARoute("/settings/appearance", AppearanceSettingsPage()),
+      _buildARoute("/app/continuation", ContinuationScreen()),
+
 
       // Post Routes
       _buildARoute(
