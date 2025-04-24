@@ -28,9 +28,9 @@ class _AppPageState extends State<AppPage> {
     socket.connect();
     socket.onAny = _onMessage;
 
-  Future.delayed(Duration(seconds: 1), (){
-    // _testEditPost();
-  });
+    Future.delayed(Duration(seconds: 1), () {
+      // _testEditPost();
+    });
   }
 
   void _testEditPost() async {

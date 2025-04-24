@@ -109,3 +109,15 @@ Future<bool> confirm({
   return result ??
       false; // return false if dialog is dismissed without selection
 }
+
+String capitalizeEachWord(String input) {
+  return input
+      .split(' ')
+      .map(
+        (word) =>
+            word.isNotEmpty
+                ? '${word[0].toUpperCase()}${word.substring(1).toLowerCase()}'
+                : '',
+      )
+      .join(' ');
+}

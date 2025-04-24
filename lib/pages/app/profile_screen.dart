@@ -1,10 +1,10 @@
 import 'package:acrilc/constants/colors.dart';
-import 'package:acrilc/models/user.dart';
 import 'package:acrilc/services/user_service.dart';
 import 'package:acrilc/util.dart';
 import 'package:acrilc/widgets/carousel.dart';
 import 'package:acrilc/widgets/circular_tag.dart';
 import 'package:acrilc/widgets/img.dart';
+import 'package:acrilc/widgets/spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -16,7 +16,9 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  late Future<UserData?> _userFuture;
+  Map<String, dynamic>? userData;
+  bool _isLoading = false;
+  bool _isFailed = false;
 
   @override
   void initState() {
@@ -24,44 +26,45 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _fetchUser();
   }
 
-  void _fetchUser() {
+  void _fetchUser() async {
     setState(() {
-      _userFuture = UserService.getCurrentUser();
+      _isLoading = true;
     });
+    try {
+      Map<String, dynamic>? data = await UserService.getUser("me");
+      if (data == null) {
+        setState(() {
+          _isFailed = true;
+        });
+      } else {
+        setState(() {
+          _isFailed = false;
+        });
+        userData = data;
+      }
+    } catch (e) {
+      setState(() {
+        _isFailed = true;
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
+
+  Future<void> fetchUser() async {}
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<UserData?>(
-      future: _userFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: Text("Loading..."));
-        } else if (snapshot.hasError ||
-            !snapshot.hasData ||
-            snapshot.data == null) {
-          return Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text('Failed to load user.'),
-                const SizedBox(height: 8),
-                ElevatedButton(
-                  onPressed: _fetchUser,
-                  child: Text(
-                    'Retry',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ),
-              ],
-            ),
-          );
-        } else {
-          final user = snapshot.data!;
-          return ProfileWidget(userData: user);
-        }
-      },
-    );
+    if (_isLoading) {
+      return Center(child: Spinner(size: 60));
+    } else if (!_isFailed && userData != null)
+      // ignore: curly_braces_in_flow_control_structures
+      return ProfileWidget(userData: userData!);
+    else
+      // ignore: curly_braces_in_flow_control_structures
+      return Text("Failed to load");
   }
 }
 
@@ -80,7 +83,7 @@ class Review {
 }
 
 class ProfileWidget extends StatelessWidget {
-  final UserData userData;
+  final Map<String, dynamic> userData;
   const ProfileWidget({super.key, required this.userData});
 
   @override
@@ -125,13 +128,17 @@ class ProfileWidget extends StatelessWidget {
       child: Column(
         children: [
           ProfileSection(
-            profilePicture: userData.profilePicture??"",
-            name: userData.fullName??"",
-            bio: userData.bio??"",
+            profilePicture: userData['profilePicture'] ?? "",
+            name: userData['fullName'] ?? "",
+            bio: userData['bio'] ?? "",
           ),
-          ProfileCards(),
+          ProfileCards(
+            totalFollowers: userData['totalFollowers'] ?? 0,
+            totalFollowing: userData['totalFollwing'] ?? 0,
+            posts: userData['posts'] ?? 0,
+          ),
           ActionButtons(),
-          Forte(),
+          Forte(fortes: userData['preferences'],),
           Story(),
           // GridGallery(),
           Padding(
@@ -274,8 +281,16 @@ class ProfileSection extends StatelessWidget {
 }
 
 class ProfileCards extends StatelessWidget {
-  
-  const ProfileCards({super.key});
+  final int totalFollowers;
+  final int totalFollowing;
+  final int posts;
+
+  const ProfileCards({
+    super.key,
+    required this.totalFollowers,
+    required this.totalFollowing,
+    required this.posts,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -286,19 +301,19 @@ class ProfileCards extends StatelessWidget {
         children: [
           Row(
             children: [
-              card("Supporters", "15K", context),
+              card("Supporters", "$totalFollowers", context),
               SizedBox(width: gap),
-              card("Supporting", "190", context),
+              card("Supporting", "$totalFollowing", context),
               SizedBox(width: gap),
-              card("Posts", "40", context),
+              card("Posts", "$posts", context),
             ],
           ),
           SizedBox(height: gap),
           Row(
             children: [
-              card("Patrons", "422", context),
+              card("Patrons", "0", context),
               SizedBox(width: gap),
-              card("Community", "150K", context),
+              card("Community", "0", context),
             ],
           ),
         ],
@@ -394,7 +409,8 @@ class ActionButtons extends StatelessWidget {
 }
 
 class Forte extends StatelessWidget {
-  const Forte({super.key});
+  final List<dynamic> fortes;
+  const Forte({super.key, required this.fortes});
 
   @override
   Widget build(BuildContext context) {
@@ -410,10 +426,14 @@ class Forte extends StatelessWidget {
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: [
-              Expanded(child: card(context, "Painting", "Abstract Painting")),
-              Expanded(child: card(context, "Sculpture", "Sculptures")),
-            ],
+            children: 
+              fortes.map((forte){
+                return card(context, forte, "");
+              }).toList()
+            // [
+            //   card(context, "Painting", "Abstract Painting"),
+            //   card(context, "Sculpture", "Sculptures"),
+            // ],
           ),
         ],
       ),
