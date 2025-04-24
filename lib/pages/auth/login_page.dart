@@ -1,16 +1,13 @@
-import 'dart:convert';
 
 import 'package:acrilc/constants/colors.dart';
-import 'package:acrilc/constants/env.dart';
+import 'package:acrilc/services/auth_service.dart';
 import 'package:acrilc/services/log_service.dart';
-import 'package:acrilc/util.dart';
+import 'package:acrilc/services/user_service.dart';
 import 'package:acrilc/widgets/buttons.dart';
 import 'package:acrilc/widgets/inputs.dart';
 import 'package:acrilc/widgets/starting_bg.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -26,7 +23,7 @@ class _LoginPageState extends State<LoginPage> {
   bool isLoading = false;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
 
     LogService.debug("appcolor");
@@ -38,49 +35,23 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
         isLoading = true;
       });
-      final String apiUrl =
-          "${ENV.baseUrl}/auth/login"; // Replace with actual hostname
-      final Map<String, String> requestBody = {
-        "email": _uuidController.text.trim(),
-        "password": _passwordController.text.trim(),
-      };
+      String email = _uuidController.text.trim();
+      String password = _passwordController.text.trim();
 
-      try {
-        final response = await http.post(
-          Uri.parse(apiUrl),
-          headers: {"Content-Type": "application/json"},
-          body: jsonEncode(requestBody),
-        );
-
-        final responseData = tryEncodeJson(response.body);
-        if (response.statusCode == 200) {
-          // Store token in SharedPreferences
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          await prefs.setString("jwt_token", responseData['token']);
-          if (mounted) context.go("/app/home");
-
-          // You can navigate to another screen here
-        } else {
-          // Handle login error
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Login Failed: ${responseData["msg"]}")),
-            );
-          }
+      bool isLoggedIn = await AuthService.doLogin(email, password);
+      if (isLoggedIn) {
+        await UserService.getCurrentUser();
+        if (mounted) context.go("/app/home");
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text("Login Failed")));
         }
-      } catch (e) {
-        LogService.error(e.toString());
-        // if (mounted) {
-        //   ScaffoldMessenger.of(context).showSnackBar(
-        //     SnackBar(content: Text("An error occurred. Please try again.")),
-        //   );
-        // }
-          if(mounted) alert(context, e.toString(), title: "Error Message", copy: true);
-      } finally {
-        setState(() {
-          isLoading = false;
-        });
       }
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -99,20 +70,12 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(height: 40),
                 Text(
                   "Welcome to Acrilc",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: AppColor.primaryText,
-                  ),
+                  style: Theme.of(context).textTheme.headlineMedium
                 ),
                 SizedBox(height: 5),
                 Text(
                   "where art find its audience",
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: AppColor.primaryText,
-                  ),
+                  style: Theme.of(context).textTheme.bodyLarge
                 ),
                 SizedBox(height: 40),
                 Form(
@@ -140,7 +103,7 @@ class _LoginPageState extends State<LoginPage> {
                             children: [
                               Text(
                                 "Login",
-                                style: TextStyle(color: Colors.white),
+                                style: Theme.of(context).textTheme.headlineMedium
                               ),
                               isLoading
                                   ? Padding(
@@ -160,7 +123,7 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(height: 50),
               ],
             ),
-            ],
+          ],
         ),
       ),
     );
@@ -191,6 +154,7 @@ class _LoginPageState extends State<LoginPage> {
         children: [
           formLabel(label),
           InputField(
+            style: Theme.of(context).textTheme.bodyLarge,
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'This field is required';
@@ -209,7 +173,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget formLabel(String text) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5),
-      child: Text(text, style: TextStyle(color: AppColor.primaryText)),
+      child: Text(text, style: Theme.of(context).textTheme.headlineMedium),
     );
   }
 }

@@ -4,6 +4,8 @@ import 'package:acrilc/pages/app/home_screen.dart';
 import 'package:acrilc/pages/app/profile_screen.dart';
 import 'package:acrilc/pages/chat/user_chat.dart';
 import 'package:acrilc/pages/chat/users_list.dart';
+import 'package:acrilc/pages/moodboard/moodboard_screen.dart';
+import 'package:acrilc/pages/portfolio/user_portfolio.dart';
 import 'package:acrilc/pages/post/create_post_screen.dart';
 import 'package:acrilc/pages/post/show_post_screen.dart';
 import 'package:acrilc/pages/settings/account/account_security_page.dart';
@@ -12,7 +14,6 @@ import 'package:acrilc/pages/settings/preference_settings_page.dart';
 import 'package:acrilc/pages/settings/profile_settings/forte_page.dart';
 import 'package:acrilc/pages/settings/profile_settings/profile_settings_page.dart'
     show ProfileSettingsPage;
-import 'package:acrilc/widgets/wip.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -97,6 +98,19 @@ class AppRouter {
         final String userId = state.pathParameters["userId"] ?? "";
         return UserChat(userId: userId,);
       }),
+
+      // Portfolio route
+      _buildARoute("/portfolio/:userId", null, builder: (context, state){
+        final String userId = state.pathParameters["userId"] ?? "";
+        return UserPortfolio(userId: userId,);
+      }),
+
+      // moodboard route
+      _buildARoute("/moodboard/:userId", null, builder: (context, state){
+        final String userId = state.pathParameters["userId"] ?? "";
+        return MoodboardScreen(userId: userId,);
+      })
+
     ],
     redirect: (context, state) async {
       if (state.fullPath == "/" ||

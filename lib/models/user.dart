@@ -48,8 +48,8 @@ class UserData {
       following: List<String>.from(json['following'] ?? []),
       role: json['role'] ?? "",
       preferences: List<String>.from(json['preferences'] ?? []),
-      createdAt: DateTime.parse(json['createdAt'] ?? ""),
-      updatedAt: DateTime.parse(json['updatedAt'] ?? ""),
+      createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
+      updatedAt: json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
     );
   }
 

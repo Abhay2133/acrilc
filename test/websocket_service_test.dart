@@ -1,7 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:acrilc/services/websocket_service.dart'; // Adjust the import
-import 'package:mockito/mockito.dart';
-import 'helpers/mock_websocket.dart';
+// Adjust the import
 
 void main() {
   test('should send welcome message when connected', () {

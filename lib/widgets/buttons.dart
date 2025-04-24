@@ -6,18 +6,20 @@ class Button extends StatelessWidget {
   final double width;
   final VoidCallback? onPressed;
   final bool? disabled;
+  final double? height;
   const Button({
     super.key,
     required this.child,
     this.width = 120,
     this.onPressed,
-    this.disabled = false
+    this.disabled = false,
+    this.height = 40,
   });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 40, // Set height
+      height: height, // Set height
       width: width,
       child: ElevatedButton(
         onPressed: () {
@@ -40,25 +42,20 @@ class PrimaryButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
 
-  const PrimaryButton({
-    super.key,
-    required this.text,
-    required this.onPressed,
-  });
+  const PrimaryButton({super.key, required this.text, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final bgColor = isDarkMode ? AppColor.primaryColor : const Color(0xFFE34A1C);
+    final bgColor =
+        isDarkMode ? AppColor.primaryColor : const Color(0xFFE34A1C);
 
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: bgColor,
         foregroundColor: Colors.white,
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
       onPressed: onPressed,
       child: Text(
@@ -68,4 +65,3 @@ class PrimaryButton extends StatelessWidget {
     );
   }
 }
-

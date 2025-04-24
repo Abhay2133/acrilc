@@ -87,6 +87,11 @@ class AppColor {
   );
 
   // Border Colors
+  static Color get lightBorder => _themeColor(
+    dark: const Color(0x33ffffff), // neutral400
+    light: const Color(0x00033000), // neutral300
+  );
+
   static Color get primaryBorder => _themeColor(
     dark: const Color(0xFF5A5A5A), // neutral400
     light: const Color(0xFFD4D4D4), // neutral300
@@ -110,6 +115,11 @@ class AppColor {
 
   static Color get chatBubbleReceiverColor => _themeColor(
     dark: const Color(0xFFFF9F1C), // neutral100
+    light: const Color(0xFFFF9F1C), // neutral200
+  );
+
+  static Color get colorPrimaryButton => _themeColor(
+    dark: const Color(0xFFE34A1C), // neutral100
     light: const Color(0xFFFF9F1C), // neutral200
   );
 }

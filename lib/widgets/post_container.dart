@@ -14,7 +14,7 @@ class PostContainer extends StatelessWidget {
     });
     // return Placeholder();
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+      padding: const EdgeInsets.symmetric(horizontal:4.0),
       child: ListView.builder(
         itemCount: data.length,
         shrinkWrap:

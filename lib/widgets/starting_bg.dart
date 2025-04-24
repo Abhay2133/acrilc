@@ -1,5 +1,5 @@
-import 'package:acrilc/constants/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class StartingBG extends StatelessWidget {
   final Widget mainUI;
@@ -90,23 +90,11 @@ class StartingBG extends StatelessWidget {
                   ? Positioned(
                     top: 40,
                     left: 20,
-                    child: Container(
-                      // padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        // color: Colors.blue,
-                      ),
-                      child: IconButton(
-                        padding: EdgeInsets.all(10),
-                        icon: Icon(
-                          Icons.arrow_back_ios_new_rounded,
-                          color: AppColor.primaryText,
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        iconSize: 30,
-                      ),
+                    child: IconButton(
+                      onPressed: () {
+                        context.pop();
+                      },
+                      icon: Icon(Icons.arrow_back_ios_rounded),
                     ),
                   )
                   : SizedBox(),

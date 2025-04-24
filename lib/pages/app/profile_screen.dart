@@ -1,8 +1,12 @@
-import 'package:acrilc/models/user.dart';
+import 'package:acrilc/constants/colors.dart';
 import 'package:acrilc/services/user_service.dart';
 import 'package:acrilc/util.dart';
+import 'package:acrilc/widgets/carousel.dart';
 import 'package:acrilc/widgets/circular_tag.dart';
+import 'package:acrilc/widgets/img.dart';
+import 'package:acrilc/widgets/spinner.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'horizontal_slider.dart';
 
@@ -14,7 +18,9 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  late Future<UserData?> _userFuture;
+  Map<String, dynamic>? userData;
+  bool _isLoading = false;
+  bool _isFailed = false;
 
   @override
   void initState() {
@@ -22,39 +28,45 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _fetchUser();
   }
 
-  void _fetchUser() {
+  void _fetchUser() async {
     setState(() {
-      _userFuture = UserService.getCurrentUser();
+      _isLoading = true;
     });
+    try {
+      Map<String, dynamic>? data = await UserService.getUser("me");
+      if (data == null) {
+        setState(() {
+          _isFailed = true;
+        });
+      } else {
+        setState(() {
+          _isFailed = false;
+        });
+        userData = data;
+      }
+    } catch (e) {
+      setState(() {
+        _isFailed = true;
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
+
+  Future<void> fetchUser() async {}
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<UserData?>(
-      future: _userFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: Text("Loading..."));
-        } else if (snapshot.hasError || !snapshot.hasData || snapshot.data == null) {
-          return Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text('Failed to load user.'),
-                const SizedBox(height: 8),
-                ElevatedButton(
-                  onPressed: _fetchUser,
-                  child: Text('Retry', style: Theme.of(context).textTheme.bodyMedium),
-                ),
-              ],
-            ),
-          );
-        } else {
-          final user = snapshot.data!;
-          return ProfileWidget(userData: user);
-        }
-      },
-    );
+    if (_isLoading) {
+      return Center(child: Spinner(size: 60));
+    } else if (!_isFailed && userData != null)
+      // ignore: curly_braces_in_flow_control_structures
+      return ProfileWidget(userData: userData!);
+    else
+      // ignore: curly_braces_in_flow_control_structures
+      return Text("Failed to load");
   }
 }
 
@@ -73,7 +85,7 @@ class Review {
 }
 
 class ProfileWidget extends StatelessWidget {
-  final UserData userData;
+  final Map<String, dynamic> userData;
   const ProfileWidget({super.key, required this.userData});
 
   @override
@@ -88,15 +100,19 @@ class ProfileWidget extends StatelessWidget {
       child: Column(
         children: [
           ProfileSection(
-            profilePicture: userData.profilePicture ?? "",
-            name: userData.fullName ?? "",
-            bio: userData.bio ?? "",
+            profilePicture: userData['profilePicture'] ?? "",
+            name: userData['fullName'] ?? "",
+            bio: userData['bio'] ?? "",
           ),
-          ProfileCards(),
+          ProfileCards(
+            totalFollowers: userData['totalFollowers'] ?? 0,
+            totalFollowing: userData['totalFollwing'] ?? 0,
+            posts: userData['posts'] ?? 0,
+          ),
           ActionButtons(),
-          const SizedBox(height: 20),
-          const HorizontalSlider(),     // slider for showcase , storyboard , marketlace
-          const SizedBox(height: 20),
+          Forte(fortes: userData['preferences'],),
+          Story(),
+          // GridGallery(),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30),
             child: Row(
@@ -112,11 +128,14 @@ class ProfileWidget extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 30),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFE34A1C),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(200)),
+                backgroundColor: AppColor.colorPrimaryButton,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(200), // Set border radius
+                ),
               ),
               onPressed: () {
-                alert(context, "Portfolio coming soon!");
+                // alert(context, "Hello");
+                context.push("/portfolio/me");
               },
               child: Container(
                 height: 50,
@@ -203,7 +222,16 @@ class ProfileSection extends StatelessWidget {
 }
 
 class ProfileCards extends StatelessWidget {
-  const ProfileCards({super.key});
+  final int totalFollowers;
+  final int totalFollowing;
+  final int posts;
+
+  const ProfileCards({
+    super.key,
+    required this.totalFollowers,
+    required this.totalFollowing,
+    required this.posts,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -214,19 +242,19 @@ class ProfileCards extends StatelessWidget {
         children: [
           Row(
             children: [
-              card("Supporters", "15K", context),
+              card("Supporters", "$totalFollowers", context),
               SizedBox(width: gap),
-              card("Supporting", "190", context),
+              card("Supporting", "$totalFollowing", context),
               SizedBox(width: gap),
-              card("Posts", "40", context),
+              card("Posts", "$posts", context),
             ],
           ),
           SizedBox(height: gap),
           Row(
             children: [
-              card("Patrons", "422", context),
+              card("Patrons", "0", context),
               SizedBox(width: gap),
-              card("Community", "150K", context),
+              card("Community", "0", context),
             ],
           ),
         ],
@@ -294,6 +322,206 @@ class ActionButtons extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class Forte extends StatelessWidget {
+  final List<dynamic> fortes;
+  const Forte({super.key, required this.fortes});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      // color: Colors.blue,
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Forte", style: Theme.of(context).textTheme.headlineLarge),
+          SizedBox(height: 20),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: 
+              fortes.map((forte){
+                return card(context, forte, "");
+              }).toList()
+            // [
+            //   card(context, "Painting", "Abstract Painting"),
+            //   card(context, "Sculpture", "Sculptures"),
+            // ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget card(BuildContext context, String title, String subtitle) {
+    return Container(
+      padding: EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Img(
+            lightImage: "assets/images/brush-black.svg",
+            darkImage: "assets/images/brush.svg",
+            height: 30,
+          ),
+          SizedBox(height: 10),
+          Text(title, style: Theme.of(context).textTheme.headlineMedium),
+          SizedBox(height: 5),
+          Text(subtitle, style: TextStyle(fontSize: 14)),
+        ],
+      ),
+    );
+  }
+}
+
+class Story extends StatelessWidget {
+  final List<Map<String, String>> cards;
+  const Story({
+    super.key,
+    this.cards = const [
+      {"src": "", "title": "Card title 1", "detail": "Card details 1"},
+      {"src": "", "title": "Card title 2", "detail": "Card details 2"},
+      {"src": "", "title": "Card title 3", "detail": "Card details 3"},
+      {"src": "", "title": "Card title 4", "detail": "Card details 4"},
+    ],
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        double cardWith = (constraints.maxWidth * 0.8).clamp(200, 400);
+        List<Widget> storyCards =
+            cards.map((item) {
+              return card(item, cardWith);
+            }).toList();
+        return Container(
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Story of Artist",
+                style: Theme.of(context).textTheme.headlineLarge,
+              ),
+              SizedBox(height: 10),
+              Text(
+                "My work is an exploration of the human experience through abstraction. I use a variety of materials and techniques to create a rich surface that reflects the complexity of life.",
+              ),
+              SizedBox(height: 10),
+              Carousel(items: storyCards),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget card(Map<String, String> card, double cardWith) {
+    return Builder(
+      builder: (context) {
+        return Container(
+          height: 270,
+          width: cardWith,
+          margin: EdgeInsets.symmetric(horizontal: 5.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: 200,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  image: DecorationImage(
+                    image: AssetImage('assets/images/profile-banner.png'),
+                    // Change to your banner image
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              SizedBox(height: 5),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                child: Text(
+                  card['title'].toString(),
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+              ),
+              SizedBox(height: 5),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                child: Text(card['detail'].toString()),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class GridGallery extends StatelessWidget {
+  const GridGallery({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 30),
+      child: Column(children: [header()]),
+    );
+  }
+
+  Widget header() {
+    return Builder(
+      builder: (context) {
+        TextStyle activeTabStyle = Theme.of(context).textTheme.headlineMedium!;
+        TextStyle tabStyle = TextStyle(
+          fontSize: activeTabStyle.fontSize,
+          color: activeTabStyle.color,
+        );
+        return Flex(
+          direction: Axis.horizontal,
+          spacing: 12,
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(width: 2, color: activeTabStyle.color!),
+                ),
+              ),
+              child: Text("Showcase", style: activeTabStyle),
+            ),
+            Text("Storyboard", style: tabStyle),
+            Text("MarketPlace", style: tabStyle),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class TestimonialWidget extends StatelessWidget {
+  final List<Review> reviews;
+
+  const TestimonialWidget({super.key, required this.reviews});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: reviews.length,
+      itemBuilder: (context, index) {
+        return ReviewCard(review: reviews[index]);
+      },
     );
   }
 }
