@@ -121,3 +121,23 @@ String capitalizeEachWord(String input) {
       )
       .join(' ');
 }
+
+List<Map<String, dynamic>> convertToMapList(List<dynamic> inputList) {
+  return inputList
+      .whereType<Map<String, dynamic>>()
+      .map((e) => e)
+      .toList();
+}
+
+
+dynamic getNestedValue(Map<String, dynamic> map, List<String> keys, [dynamic value]) {
+  dynamic current = map;
+  for (final key in keys) {
+    if (current is Map<String, dynamic> && current.containsKey(key)) {
+      current = current[key];
+    } else {
+      return value; // Return null if key doesn't exist or is not a map
+    }
+  }
+  return current;
+}

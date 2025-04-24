@@ -8,7 +8,7 @@ import 'package:acrilc/widgets/spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import 'horizontal_slider.dart';
+import 'package:acrilc/widgets/horizontal_slider.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -20,7 +20,6 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   Map<String, dynamic>? userData;
   bool _isLoading = false;
-  bool _isFailed = false;
 
   @override
   void initState() {
@@ -34,20 +33,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
     try {
       Map<String, dynamic>? data = await UserService.getUser("me");
-      if (data == null) {
-        setState(() {
-          _isFailed = true;
-        });
-      } else {
-        setState(() {
-          _isFailed = false;
-        });
+      if (data != null) {
         userData = data;
       }
     } catch (e) {
-      setState(() {
-        _isFailed = true;
-      });
+      if(mounted) alert(context, e.toString(), title: "Error", copy: true);
     } finally {
       setState(() {
         _isLoading = false;
@@ -61,7 +51,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     if (_isLoading) {
       return Center(child: Spinner(size: 60));
-    } else if (!_isFailed && userData != null)
+    } else if (userData != null)
       // ignore: curly_braces_in_flow_control_structures
       return ProfileWidget(userData: userData!);
     else
@@ -110,25 +100,15 @@ class ProfileWidget extends StatelessWidget {
             posts: userData['posts'] ?? 0,
           ),
           ActionButtons(),
-          Forte(fortes: userData['preferences'],),
+          Forte(fortes: userData['preferences']),
           Story(),
-          // GridGallery(),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text("Testimonials", style: Theme.of(context).textTheme.headlineLarge),
-              ],
-            ),
-          ),
-          ...reviews.map((review) => ReviewCard(review: review)).toList(),
-          const SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
+          HorizontalSlider(),
+          // portfolio button
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColor.colorPrimaryButton,
+                backgroundColor: AppColor.primaryColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(200), // Set border radius
                 ),
@@ -344,10 +324,10 @@ class Forte extends StatelessWidget {
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: 
-              fortes.map((forte){
-                return card(context, forte, "");
-              }).toList()
+            children:
+                fortes.map((forte) {
+                  return card(context, forte, "");
+                }).toList(),
             // [
             //   card(context, "Painting", "Abstract Painting"),
             //   card(context, "Sculpture", "Sculptures"),
