@@ -12,9 +12,6 @@ class HorizontalSlider extends StatelessWidget {
           children: [
             const TabBar(
               isScrollable: true,
-              labelColor: Colors.black,
-              unselectedLabelColor: Colors.black,
-              indicatorColor: Colors.black,
               labelStyle: TextStyle(fontWeight: FontWeight.bold),
               tabs: [
                 Tab(text: 'Showcase'),

@@ -1,4 +1,5 @@
 import 'package:acrilc/constants/colors.dart';
+import 'package:acrilc/services/post_service.dart';
 import 'package:acrilc/services/user_service.dart';
 import 'package:acrilc/util.dart';
 import 'package:acrilc/widgets/carousel.dart';
@@ -37,7 +38,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         userData = data;
       }
     } catch (e) {
-      if(mounted) alert(context, e.toString(), title: "Error", copy: true);
+      if (mounted) alert(context, e.toString(), title: "Error", copy: true);
     } finally {
       setState(() {
         _isLoading = false;
@@ -81,9 +82,27 @@ class ProfileWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Review> reviews = [
-      Review(reviewerName: "Alice Johnson", reviewDate: "March 20, 2025", stars: 5, text: "Amazing service! Highly recommended for anyone looking for quality work."),
-      Review(reviewerName: "David Smith", reviewDate: "March 18, 2025", stars: 4, text: "Great experience overall. A few minor improvements would make it perfect."),
-      Review(reviewerName: "Emily Carter", reviewDate: "March 15, 2025", stars: 5, text: "Absolutely fantastic! The team went above and beyond my expectations."),
+      Review(
+        reviewerName: "Alice Johnson",
+        reviewDate: "March 20, 2025",
+        stars: 5,
+        text:
+            "Amazing service! Highly recommended for anyone looking for quality work.",
+      ),
+      Review(
+        reviewerName: "David Smith",
+        reviewDate: "March 18, 2025",
+        stars: 4,
+        text:
+            "Great experience overall. A few minor improvements would make it perfect.",
+      ),
+      Review(
+        reviewerName: "Emily Carter",
+        reviewDate: "March 15, 2025",
+        stars: 5,
+        text:
+            "Absolutely fantastic! The team went above and beyond my expectations.",
+      ),
     ];
 
     return SingleChildScrollView(
@@ -102,7 +121,7 @@ class ProfileWidget extends StatelessWidget {
           ActionButtons(),
           Forte(fortes: userData['preferences']),
           Story(),
-          HorizontalSlider(),
+          Showcase(userId: userData['_id']),
           // portfolio button
           Container(
             padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
@@ -122,7 +141,11 @@ class ProfileWidget extends StatelessWidget {
                 alignment: Alignment.center,
                 child: const Text(
                   "Portfolio",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
@@ -133,12 +156,96 @@ class ProfileWidget extends StatelessWidget {
   }
 }
 
+class Showcase extends StatefulWidget {
+  final String userId;
+  const Showcase({super.key, required this.userId});
+
+  @override
+  State<Showcase> createState() => _ShowcaseState();
+}
+
+class _ShowcaseState extends State<Showcase> {
+  bool isLoading = true;
+  List<Map<String, dynamic>>? data;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _fetchData();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return isLoading
+        ? Center(child: Spinner(size: 30))
+        : data == null
+        ? _retry()
+        : data!.isEmpty
+        ? SizedBox()
+        : HorizontalSlider(showcase: showcase());
+  }
+
+  List<Map<String, dynamic>> showcase() {
+    if (data == null) return [];
+    if (data is! List<Map<String, dynamic>>) return [];
+    if (data!.isEmpty) return [];
+    List<Map<String, dynamic>> value =
+        data!.map((item) {
+          return {
+            "target": "/post/${item['_id']}",
+            "imageURL": item['media'][0]['url'] as String,
+          };
+        }).toList();
+
+    return value;
+  }
+
+  Widget _retry() {
+    return Center(
+      child: Column(
+        children: [
+          SizedBox(height: 200),
+          Text(
+            "Failed to load post",
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: _fetchData,
+            child: Text('Retry', style: Theme.of(context).textTheme.bodyMedium),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _fetchData() async {
+    try {
+      dynamic data = await PostService.getPostsByUserId(widget.userId);
+      if (data != null) {
+        this.data = data;
+      }
+    } catch (e) {
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+}
+
 class ProfileSection extends StatelessWidget {
   final String profilePicture;
   final String name;
   final String bio;
 
-  const ProfileSection({super.key, required this.profilePicture, required this.name, required this.bio});
+  const ProfileSection({
+    super.key,
+    required this.profilePicture,
+    required this.name,
+    required this.bio,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -275,13 +382,22 @@ class ActionButtons extends StatelessWidget {
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFFE34A1C),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(200)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(200),
+                ),
               ),
               onPressed: () => alert(context, "Support Clicked"),
               child: Container(
                 height: 50,
                 alignment: Alignment.center,
-                child: const Text("Support", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white)),
+                child: const Text(
+                  "Support",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
+                ),
               ),
             ),
           ),
@@ -290,13 +406,22 @@ class ActionButtons extends StatelessWidget {
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFFE34A1C),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(200)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(200),
+                ),
               ),
               onPressed: () => alert(context, "Message Clicked"),
               child: Container(
                 height: 50,
                 alignment: Alignment.center,
-                child: const Text("Message", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white)),
+                child: const Text(
+                  "Message",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
+                ),
               ),
             ),
           ),
@@ -520,12 +645,15 @@ class ReviewCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(review.reviewerName, style: Theme.of(context).textTheme.titleLarge),
+            Text(
+              review.reviewerName,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
             const SizedBox(height: 4),
             Row(
               children: List.generate(
                 5,
-                    (index) => Icon(
+                (index) => Icon(
                   Icons.star,
                   color: index < review.stars ? Colors.orange : Colors.grey,
                   size: 20,
@@ -533,7 +661,10 @@ class ReviewCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 4),
-            Text(review.reviewDate, style: Theme.of(context).textTheme.bodySmall),
+            Text(
+              review.reviewDate,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
             const SizedBox(height: 8),
             Text(review.text, style: Theme.of(context).textTheme.bodyMedium),
           ],

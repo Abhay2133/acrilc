@@ -204,4 +204,31 @@ class PostService {
       throw Exception(response.body);
     }
   }
+
+
+  static Future<List<Map<String, dynamic>>?> getPostsByUserId(
+    String userId, [
+    http.Client? client,
+  ]) async {
+    final url = Uri.parse('${ENV.baseUrl}/api/posts/user/$userId');
+
+    final httpClient = client ?? http.Client();
+    final request = http.Request('GET', url);
+
+    String? token = await getAuthToken();
+    if (token == null) {
+      throw Exception("jwt token missing");
+    }
+    request.headers['Authorization'] = "Bearer $token";
+    final streamedResponse = await httpClient.send(request);
+    final response = await http.Response.fromStream(streamedResponse);
+
+    if (response.statusCode == 200) {
+      List<dynamic> payload = jsonDecode(response.body)['data'];
+      return convertToMapList(payload); //["data"];
+    } else {
+      throw Exception(response.body);
+    }
+  }
+
 }
