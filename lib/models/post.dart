@@ -69,8 +69,8 @@ class PostData {
   final List<dynamic>? media;
   final String? forte;
   final String? location;
-  final List<String>? applauds;
-  final List<String>? comments;
+  final List<dynamic>? applauds;
+  final List<dynamic>? comments;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
@@ -107,8 +107,8 @@ class PostData {
       media: List<dynamic>.from(json['media']),
       forte: json['forte'],
       location: json['location'],
-      applauds: List<String>.from(json['applauds']),
-      comments: List<String>.from(json['comments']),
+      applauds: List<dynamic>.from(json['applauds']),
+      comments: List<dynamic>.from(json['comments']),
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
     );
