@@ -21,9 +21,8 @@ class ShowPostScreen extends StatefulWidget {
 
 class _ShowPostScreenState extends State<ShowPostScreen> {
   late Future<PostData?> _postDataFuture;
-  late PostData _postData;
+  PostData? _postData;
   bool _isLoading = true;
-  bool _isFailed = false;
   bool _isMyPost = false;
 
   @override
@@ -39,9 +38,9 @@ class _ShowPostScreenState extends State<ShowPostScreen> {
 
   void _authorize() async {
     UserData? me = await UserService.getCurrentUser();
-    if (_isFailed || me == null) return;
+    if (_postData == null || me == null) return;
     setState(() {
-      _isMyPost = me.id == _postData.author;
+      _isMyPost = me.id == _postData!.author;
     });
   }
 
@@ -49,22 +48,15 @@ class _ShowPostScreenState extends State<ShowPostScreen> {
     try {
       setState(() {
         _isLoading = true;
-        _isFailed = false;
       });
       PostData? data = await PostService.getPost(widget.postId);
-      if (data == null) {
-        setState(() {
-          _isFailed = true;
-        });
-      } else {
+      if (data != null) {
         setState(() {
           _postData = data;
         });
       }
     } catch (e) {
-      setState(() {
-        _isFailed = true;
-      });
+      if (mounted) alert(context, e.toString(), title: "Error", copy: true);
     } finally {
       setState(() {
         _isLoading = false;
@@ -126,25 +118,6 @@ class _ShowPostScreenState extends State<ShowPostScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (_isFailed) {
-      return Center(
-        child: Column(
-          children: [
-            Text(
-              "Failed to load post",
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            ElevatedButton(
-              onPressed: _fetchPost,
-              child: Text(
-                'Retry',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-            ),
-          ],
-        ),
-      );
-    }
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -179,12 +152,17 @@ class _ShowPostScreenState extends State<ShowPostScreen> {
           SizedBox(width: 8),
         ],
         elevation: 0,
-        title: Text(
-          widget.postId,
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
+        // title: Text(
+        //   widget.postId,
+        //   style: Theme.of(context).textTheme.bodySmall,
+        // ),
       ),
-      body: _isLoading ? Center(child: Spinner(size: 30)) : _postBody(context),
+      body:
+          _isLoading
+              ? Center(child: Spinner(size: 30))
+              : _postData == null
+              ? _retry()
+              : _postBody(context),
     );
   }
 
@@ -200,7 +178,7 @@ class _ShowPostScreenState extends State<ShowPostScreen> {
               aspectRatio: 16 / 9,
             ),
             items:
-                _postData.media
+                _postData!.media
                     ?.where((media) => media['type'] == "image")
                     .toList()
                     .map((i) {
@@ -236,7 +214,7 @@ class _ShowPostScreenState extends State<ShowPostScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Text(
-              _postData.title!,
+              _postData!.title!,
               style: Theme.of(context).textTheme.headlineMedium,
             ),
           ),
@@ -247,7 +225,7 @@ class _ShowPostScreenState extends State<ShowPostScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Text(
-              _postData.forte!,
+              _postData!.forte!,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
           ),
@@ -256,7 +234,7 @@ class _ShowPostScreenState extends State<ShowPostScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4),
             child: Text(
-              _postData.size!,
+              _postData!.size!,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
           ),
@@ -273,7 +251,7 @@ class _ShowPostScreenState extends State<ShowPostScreen> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0),
             child: Text(
-              _postData.story!,
+              _postData!.story!,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
           ),
@@ -316,6 +294,25 @@ class _ShowPostScreenState extends State<ShowPostScreen> {
           ),
 
           const SizedBox(height: 32),
+        ],
+      ),
+    );
+  }
+
+  Widget _retry() {
+    return Center(
+      child: Column(
+        children: [
+          SizedBox(height: 200),
+          Text(
+            "Failed to load post",
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: _fetchPost,
+            child: Text('Retry', style: Theme.of(context).textTheme.bodyMedium),
+          ),
         ],
       ),
     );

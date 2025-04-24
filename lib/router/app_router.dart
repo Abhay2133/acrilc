@@ -4,6 +4,7 @@ import 'package:acrilc/pages/app/home_screen.dart';
 import 'package:acrilc/pages/app/profile_screen.dart';
 import 'package:acrilc/pages/chat/user_chat.dart';
 import 'package:acrilc/pages/chat/users_list.dart';
+import 'package:acrilc/pages/discover/theme_screen.dart';
 import 'package:acrilc/pages/moodboard/moodboard_screen.dart';
 import 'package:acrilc/pages/portfolio/user_portfolio.dart';
 import 'package:acrilc/pages/post/create_post_screen.dart';
@@ -69,6 +70,16 @@ class AppRouter {
         ],
       ),
 
+      // discover -> theme
+      _buildARoute(
+        '/discover/:theme',
+        null,
+        builder: (context, state) {
+          final String theme = state.pathParameters["theme"] ?? "";
+          return ForteScreen(forte: theme);
+        },
+      ),
+
       // Settings Routes
       _buildARoute('/settings', const SettingsPage()),
       _buildARoute('/settings/profile', const ProfileSettingsPage()),
@@ -94,23 +105,34 @@ class AppRouter {
 
       // Chat routes
       _buildARoute("/chat/new", UsersList()),
-      _buildARoute("/chat/:userId", null, builder: (context, state){
-        final String userId = state.pathParameters["userId"] ?? "";
-        return UserChat(userId: userId,);
-      }),
+      _buildARoute(
+        "/chat/:userId",
+        null,
+        builder: (context, state) {
+          final String userId = state.pathParameters["userId"] ?? "";
+          return UserChat(userId: userId);
+        },
+      ),
 
       // Portfolio route
-      _buildARoute("/portfolio/:userId", null, builder: (context, state){
-        final String userId = state.pathParameters["userId"] ?? "";
-        return UserPortfolio(userId: userId,);
-      }),
+      _buildARoute(
+        "/portfolio/:userId",
+        null,
+        builder: (context, state) {
+          final String userId = state.pathParameters["userId"] ?? "";
+          return UserPortfolio(userId: userId);
+        },
+      ),
 
       // moodboard route
-      _buildARoute("/moodboard/:userId", null, builder: (context, state){
-        final String userId = state.pathParameters["userId"] ?? "";
-        return MoodboardScreen(userId: userId,);
-      })
-
+      _buildARoute(
+        "/moodboard/:userId",
+        null,
+        builder: (context, state) {
+          final String userId = state.pathParameters["userId"] ?? "";
+          return MoodboardScreen(userId: userId);
+        },
+      ),
     ],
     redirect: (context, state) async {
       if (state.fullPath == "/" ||

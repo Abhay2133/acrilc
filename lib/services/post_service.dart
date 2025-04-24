@@ -155,4 +155,53 @@ class PostService {
       throw Exception(response.body);
     }
   }
+
+  static Future<List<Map<String, dynamic>>?> getTrendingPosts([
+    http.Client? client,
+  ]) async {
+    final url = Uri.parse('${ENV.baseUrl}/api/discover/trending');
+
+    final httpClient = client ?? http.Client();
+    final request = http.Request('GET', url);
+
+    String? token = await getAuthToken();
+    if (token == null) {
+      throw Exception("jwt token missing");
+    }
+    request.headers['Authorization'] = "Bearer $token";
+    final streamedResponse = await httpClient.send(request);
+    final response = await http.Response.fromStream(streamedResponse);
+
+    if (response.statusCode == 200) {
+      List<dynamic> payload = jsonDecode(response.body);
+      return convertToMapList(payload); //["data"];
+    } else {
+      throw Exception(response.body);
+    }
+  }
+
+  static Future<List<Map<String, dynamic>>?> getPostsByForte(
+    String forte, [
+    http.Client? client,
+  ]) async {
+    final url = Uri.parse('${ENV.baseUrl}/api/discover/forte?forte=$forte');
+
+    final httpClient = client ?? http.Client();
+    final request = http.Request('GET', url);
+
+    String? token = await getAuthToken();
+    if (token == null) {
+      throw Exception("jwt token missing");
+    }
+    request.headers['Authorization'] = "Bearer $token";
+    final streamedResponse = await httpClient.send(request);
+    final response = await http.Response.fromStream(streamedResponse);
+
+    if (response.statusCode == 200) {
+      List<dynamic> payload = jsonDecode(response.body);
+      return convertToMapList(payload); //["data"];
+    } else {
+      throw Exception(response.body);
+    }
+  }
 }

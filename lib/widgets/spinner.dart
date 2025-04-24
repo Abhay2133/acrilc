@@ -10,7 +10,7 @@ class Spinner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color spinnerColor = color ?? AppColor.primaryText;
+    Color spinnerColor = color ?? AppColor.primaryColor;
     double spinnerStroke = stroke ?? 2.0;
     return SizedBox(
       height: size,
