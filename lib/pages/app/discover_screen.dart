@@ -131,11 +131,79 @@ class Themes extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       itemCount: imageUrls.length,
       itemBuilder: (context, index) {
-        return ClipRRect(
-          borderRadius: BorderRadius.circular(12),
-          child: Image.network(imageUrls[index], fit: BoxFit.cover),
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => CeramicArtWorks(imageUrl: imageUrls[index]),
+              ),
+            );
+          },
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Image.network(imageUrls[index], fit: BoxFit.cover),
+          ),
         );
       },
+    );
+  }
+}
+
+
+class CeramicArtWorks extends StatelessWidget {
+  const CeramicArtWorks({super.key, required String imageUrl});
+
+  final List<String> imageUrls = const [
+    'assets/images/pots1.jpg',
+    'assets/images/sculpture1.jpg',
+    'assets/images/pattern1.jpg',
+    'assets/images/vases.jpg',
+    'assets/images/statue1.jpg',
+    'assets/images/group_statue.jpg',
+    'assets/images/shop.jpg',
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context); // Goes back to DiscoverScreen
+          },
+        ),
+        title: Text("Discover", style: Theme.of(context).textTheme.headlineLarge),
+        actions: const [Padding(padding: EdgeInsets.all(8), child: Icon(Icons.search))],
+        backgroundColor: Colors.white,
+        elevation: 0,
+      ),
+      backgroundColor: Colors.white,
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Ceramic Art Works", style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold, fontSize: 20)),
+            const SizedBox(height: 16),
+            Expanded(
+              child: GridView.count(
+                crossAxisCount: 2,
+                mainAxisSpacing: 12,
+                crossAxisSpacing: 12,
+                childAspectRatio: 1,
+                children: imageUrls.map((image) {
+                  return ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.asset(image, fit: BoxFit.cover),
+                  );
+                }).toList(),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
