@@ -1,9 +1,12 @@
 import 'dart:math';
+import 'package:acrilc/constants/sample.dart';
+import 'package:acrilc/pages/post/create_post_screen.dart';
+import 'package:acrilc/services/log_service.dart';
 import 'package:acrilc/services/websocket_service.dart';
 import 'package:acrilc/widgets/sidepanel.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:socket_io_client/socket_io_client.dart'; // show GoRouterHelper, GoRouterState;
+// show GoRouterHelper, GoRouterState;
 
 enum Page { home, discover, post, chat, profile }
 
@@ -21,15 +24,32 @@ class _AppPageState extends State<AppPage> {
   void initState() {
     super.initState();
 
-    final _socket = WebSocketService();
-    _socket.connect();
-    _socket.onAny = _onMessage;
+    final socket = WebSocketService();
+    socket.connect();
+    socket.onAny = _onMessage;
+
+    Future.delayed(Duration(seconds: 1), () {
+      // _testEditPost();
+    });
+  }
+
+  void _testEditPost() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CreatePostScreen(postData: samplePost),
+      ),
+    );
+
+    LogService.debug(result);
   }
 
   dynamic _onMessage(String? event, dynamic data) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text("$event")));
+    if (mounted) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("$event")));
+    }
   }
 
   @override
