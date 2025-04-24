@@ -1,3 +1,4 @@
+import 'package:acrilc/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 class HorizontalSlider extends StatelessWidget {
@@ -9,11 +10,8 @@ class HorizontalSlider extends StatelessWidget {
       length: 3,
       child: Column(
         children: [
-          const TabBar(
+         TabBar(
             isScrollable: true,
-            labelColor: Colors.black,
-            unselectedLabelColor: Colors.black,
-            indicatorColor: Colors.black,
             labelStyle: TextStyle(fontWeight: FontWeight.bold),
             tabs: [
               Tab(text: 'Showcase'),
@@ -70,20 +68,17 @@ class HorizontalSlider extends StatelessWidget {
       child: GridView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        itemCount: randomImageUrls.length,
+        itemCount: 9,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
+          crossAxisSpacing: 8,
+          mainAxisSpacing: 8,
           childAspectRatio: 1, // square ratio (can adjust height with this)
         ),
         itemBuilder: (context, index) {
           return ClipRRect(
-            borderRadius: BorderRadius.circular(16),
-            child: Image.network(
-              randomImageUrls[index],
-              fit: BoxFit.cover,
-            ),
+            borderRadius: BorderRadius.circular(8),
+            child: Container(color: AppColor.secondaryText)
           );
         },
       ),
