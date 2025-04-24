@@ -34,6 +34,12 @@ class _SidePanelState extends State<SidePanel> {
   }
 
   Future<void> _logout(BuildContext context) async {
+    bool confirmed = await confirm(
+      context: context,
+      title: "Confirm Logout",
+      body: "You will not lose any data.",
+    );
+    if(!confirmed) return;
     await AuthService.doLogout();
     if (context.mounted) context.go("/");
   }

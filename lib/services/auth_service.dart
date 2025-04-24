@@ -79,7 +79,6 @@ class AuthService {
 
   static Future<void> doLogout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove("jwt_token");
-    await prefs.remove("user-profile");
+    prefs.clear();
   }
 }
