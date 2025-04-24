@@ -7,31 +7,33 @@ class HorizontalSlider extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 3,
-      child: Column(
-        children: [
-          const TabBar(
-            isScrollable: true,
-            labelColor: Colors.black,
-            unselectedLabelColor: Colors.black,
-            indicatorColor: Colors.black,
-            labelStyle: TextStyle(fontWeight: FontWeight.bold),
-            tabs: [
-              Tab(text: 'Showcase'),
-              Tab(text: 'Storyboard'),
-              Tab(text: 'Marketplace'),
-            ],
-          ),
-          SizedBox(
-            height: 400, // You can adjust this
-            child: TabBarView(
-              children: [
-                _buildGridTab(context, _showcaseImages),
-                _buildGridTab(context, _storyboardImages),
-                _buildGridTab(context, _marketplaceImages),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            const TabBar(
+              isScrollable: true,
+              labelColor: Colors.black,
+              unselectedLabelColor: Colors.black,
+              indicatorColor: Colors.black,
+              labelStyle: TextStyle(fontWeight: FontWeight.bold),
+              tabs: [
+                Tab(text: 'Showcase'),
+                Tab(text: 'Storyboard'),
+                Tab(text: 'Marketplace'),
               ],
             ),
-          ),
-        ],
+            SizedBox(
+              height: 400, // You can adjust this
+              child: TabBarView(
+                children: [
+                  _buildGridTab(context, _showcaseImages),
+                  _buildGridTab(context, _storyboardImages),
+                  _buildGridTab(context, _marketplaceImages),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -69,7 +71,6 @@ class HorizontalSlider extends StatelessWidget {
       padding: const EdgeInsets.all(12.0),
       child: GridView.builder(
         shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
         itemCount: randomImageUrls.length,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
