@@ -8,6 +8,8 @@ import 'package:acrilc/widgets/spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import 'horizontal_slider.dart';
+
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
@@ -89,41 +91,11 @@ class ProfileWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Review> reviews = [
-      Review(
-        reviewerName: "Alice Johnson",
-        reviewDate: "March 20, 2025",
-        stars: 5,
-        text:
-            "Amazing service! Highly recommended for anyone looking for quality work.",
-      ),
-      Review(
-        reviewerName: "David Smith",
-        reviewDate: "March 18, 2025",
-        stars: 4,
-        text:
-            "Great experience overall. A few minor improvements would make it perfect.",
-      ),
-      Review(
-        reviewerName: "Emily Carter",
-        reviewDate: "March 15, 2025",
-        stars: 5,
-        text:
-            "Absolutely fantastic! The team went above and beyond my expectations.",
-      ),
-      Review(
-        reviewerName: "Michael Brown",
-        reviewDate: "March 10, 2025",
-        stars: 3,
-        text: "Decent service, but there were some delays in response time.",
-      ),
-      Review(
-        reviewerName: "Sophia Wilson",
-        reviewDate: "March 5, 2025",
-        stars: 5,
-        text:
-            "Excellent support and a well-designed platform. Very happy with it!",
-      ),
+      Review(reviewerName: "Alice Johnson", reviewDate: "March 20, 2025", stars: 5, text: "Amazing service! Highly recommended for anyone looking for quality work."),
+      Review(reviewerName: "David Smith", reviewDate: "March 18, 2025", stars: 4, text: "Great experience overall. A few minor improvements would make it perfect."),
+      Review(reviewerName: "Emily Carter", reviewDate: "March 15, 2025", stars: 5, text: "Absolutely fantastic! The team went above and beyond my expectations."),
     ];
+
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -142,21 +114,18 @@ class ProfileWidget extends StatelessWidget {
           Story(),
           // GridGallery(),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 30),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text(
-                  "Testimonial",
-                  style: Theme.of(context).textTheme.headlineLarge,
-                ),
+                Text("Testimonials", style: Theme.of(context).textTheme.headlineLarge),
               ],
             ),
           ),
-          ReviewCard(review: reviews[0]),
-          // TestimonialWidget(reviews: reviews),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+          ...reviews.map((review) => ReviewCard(review: review)).toList(),
+          const SizedBox(height: 20),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColor.colorPrimaryButton,
@@ -171,19 +140,13 @@ class ProfileWidget extends StatelessWidget {
               child: Container(
                 height: 50,
                 alignment: Alignment.center,
-                child: Text(
+                child: const Text(
                   "Portfolio",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    color: Colors.white,
-                  ),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
                 ),
               ),
             ),
           ),
-
-          // SizedBox(height: 60),
         ],
       ),
     );
@@ -195,57 +158,38 @@ class ProfileSection extends StatelessWidget {
   final String name;
   final String bio;
 
-  const ProfileSection({
-    super.key,
-    required this.profilePicture,
-    required this.name,
-    required this.bio,
-  });
+  const ProfileSection({super.key, required this.profilePicture, required this.name, required this.bio});
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        // Banner + Name
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               height: 180,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage(
-                    'assets/images/profile-banner.png',
-                  ), // Change to your banner image
+                  image: AssetImage('assets/images/profile-banner.png'),
                   fit: BoxFit.cover,
                 ),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 30.0,
-                vertical: 20,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    name,
-                    style:
-                        Theme.of(context).textTheme.headlineLarge, // Uses theme
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    bio,
-                    style:
-                        Theme.of(context).textTheme.titleMedium, // Uses theme
-                  ),
-                  SizedBox(height: 6),
+                  Text(name, style: Theme.of(context).textTheme.headlineLarge),
+                  const SizedBox(height: 4),
+                  Text(bio, style: Theme.of(context).textTheme.titleMedium),
+                  const SizedBox(height: 6),
                   Wrap(
                     spacing: 6.0,
                     runSpacing: 4.0,
-                    children: [
+                    children: const [
                       CircularTag(label: "Room Decor"),
                       CircularTag(label: "Consultation"),
                       CircularTag(label: "Art Therapy"),
@@ -256,7 +200,6 @@ class ProfileSection extends StatelessWidget {
             ),
           ],
         ),
-        // Profile Image
         Positioned(
           right: 20,
           top: 80,
@@ -265,10 +208,8 @@ class ProfileSection extends StatelessWidget {
             width: 150,
             decoration: BoxDecoration(
               border: Border.all(color: Colors.white54, width: 3),
-              image: DecorationImage(
-                image: AssetImage(
-                  'assets/images/profile-pic.png',
-                ), // Change to your banner image
+              image: const DecorationImage(
+                image: AssetImage('assets/images/profile-pic.png'),
                 fit: BoxFit.cover,
               ),
               borderRadius: BorderRadius.circular(500),
@@ -296,7 +237,7 @@ class ProfileCards extends StatelessWidget {
   Widget build(BuildContext context) {
     double gap = 8;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         children: [
           Row(
@@ -324,12 +265,11 @@ class ProfileCards extends StatelessWidget {
   Widget card(String title, String value, BuildContext context) {
     return Expanded(
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 0, vertical: 20),
+        padding: const EdgeInsets.symmetric(vertical: 20),
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(10),
         ),
-        // height: 80,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -354,51 +294,29 @@ class ActionButtons extends StatelessWidget {
           Expanded(
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFFE34A1C),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(200), // Set border radius
-                ),
+                backgroundColor: const Color(0xFFE34A1C),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(200)),
               ),
-              onPressed: () {
-                alert(context, "Hello");
-              },
+              onPressed: () => alert(context, "Support Clicked"),
               child: Container(
                 height: 50,
                 alignment: Alignment.center,
-                child: Text(
-                  "Support",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    color: Colors.white,
-                  ),
-                ),
+                child: const Text("Support", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white)),
               ),
             ),
           ),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
           Expanded(
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFFE34A1C),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(200), // Set border radius
-                ),
+                backgroundColor: const Color(0xFFE34A1C),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(200)),
               ),
-              onPressed: () {
-                alert(context, "Hello");
-              },
+              onPressed: () => alert(context, "Message Clicked"),
               child: Container(
                 height: 50,
                 alignment: Alignment.center,
-                child: Text(
-                  "Message",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    color: Colors.white,
-                  ),
-                ),
+                child: const Text("Message", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white)),
               ),
             ),
           ),
@@ -610,41 +528,34 @@ class TestimonialWidget extends StatelessWidget {
 
 class ReviewCard extends StatelessWidget {
   final Review review;
-
   const ReviewCard({super.key, required this.review});
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      elevation: 3,
+      margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              review.reviewerName,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
+            Text(review.reviewerName, style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 4),
-            Text(
-              review.reviewDate,
-              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-            ),
-            const SizedBox(height: 8),
             Row(
               children: List.generate(
                 5,
-                (index) => Icon(
-                  index < review.stars ? Icons.star : Icons.star_border,
-                  color: Colors.amber,
+                    (index) => Icon(
+                  Icons.star,
+                  color: index < review.stars ? Colors.orange : Colors.grey,
+                  size: 20,
                 ),
               ),
             ),
+            const SizedBox(height: 4),
+            Text(review.reviewDate, style: Theme.of(context).textTheme.bodySmall),
             const SizedBox(height: 8),
-            Text(review.text, style: const TextStyle(fontSize: 16)),
+            Text(review.text, style: Theme.of(context).textTheme.bodyMedium),
           ],
         ),
       ),
